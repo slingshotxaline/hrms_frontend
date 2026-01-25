@@ -1,15 +1,23 @@
-import Link from 'next/link';
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      router.push('/dashboard')
+    } else {
+      router.push('/login')
+    }
+  }, [router])
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-24 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-      <h1 className="text-5xl font-bold mb-8">HRMS Portal</h1>
-      <p className="text-xl mb-8">Enterprise Human Resource Management System</p>
-      <div className="flex space-x-4">
-        <Link href="/login" className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition">
-          Login to Portal
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600"></div>
     </div>
-  );
+  )
 }

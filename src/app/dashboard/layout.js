@@ -1,21 +1,32 @@
-import './globals.css'
-import { Inter } from 'next/font/google'
+'use client'
 
-const inter = Inter({ subsets: ['latin'] })
+import { useAuth } from '@/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import DashboardLayout from '@/components/layout/DashboardLayout'
 
-export const metadata = {
-  title: 'HRMS - Human Resource Management System',
-  description: 'Complete HR Management Solution',
+export default function Layout({ children }) {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login')
+    }
+  }, [user, loading, router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600"></div>
+      </div>
+    )
+  }
+
+  if (!user) return null
+
+  return <DashboardLayout>{children}</DashboardLayout>
 }
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  )
-}
-
 
 // 'use client';
 // import Link from 'next/link';
