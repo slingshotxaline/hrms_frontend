@@ -5,8 +5,10 @@ import { apiCall } from '@/lib/api'
 import StatsCard from './StatsCard'
 import QuickActions from './QuickActions'
 import RecentActivity from './RecentActivity'
+
 import Loading from '@/components/common/Loading'
 import { Users, Check, Calendar, DollarSign } from 'lucide-react'
+import OfficeCalendar from '../OfficeCalendar/OfficeCalendar'
 
 export default function DashboardView() {
   const [stats, setStats] = useState({
@@ -63,10 +65,21 @@ export default function DashboardView() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <QuickActions />
+      {/* Calendar and Quick Actions Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="">
+          <OfficeCalendar />
+        </div>
+        <div>
+          <QuickActions />
+        </div>
+        <div className="">
         <RecentActivity />
       </div>
+      </div>
+
+      {/* Recent Activity */}
+      
     </div>
   )
 }
