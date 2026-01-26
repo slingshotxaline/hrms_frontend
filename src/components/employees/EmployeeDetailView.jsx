@@ -171,7 +171,7 @@ export default function EmployeeDetailView({ employeeId }) {
               lastMonthPayroll={lastMonthPayroll}
             />
           )}
-          {activeTab === 'attendance' && <AttendanceTab attendance={attendance} />}
+          {activeTab === 'attendance' && <AttendanceTab attendance={attendance} employeeId={employeeId} />}
           {activeTab === 'leaves' && <LeavesTab leaves={leaves} />}
           {activeTab === 'payroll' && <PayrollTab payrolls={payrolls} employee={employee} />}
         </div>
@@ -307,86 +307,203 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
 }
 
 // Attendance Tab
-function AttendanceTab({ attendance }) {
-  const [filter, setFilter] = useState('all')
+function AttendanceTab({ attendance, employeeId }) {
+    const currentDate = new Date()
+    const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1)
+    const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear())
+    const [filter, setFilter] = useState('all')
+    
+    // Filter attendance by selected month and year
+    const monthFilteredAttendance = attendance.filter(a => {
+      const date = new Date(a.date)
+      return date.getMonth() + 1 === selectedMonth && date.getFullYear() === selectedYear
+    })
   
-  const filteredAttendance = filter === 'all' 
-    ? attendance 
-    : attendance.filter(a => a.status === filter)
-
-  const stats = {
-    present: attendance.filter(a => a.status === 'Present').length,
-    absent: attendance.filter(a => a.status === 'Absent').length,
-    leave: attendance.filter(a => a.status === 'Leave').length,
-    late: attendance.filter(a => a.lateMinutes > 0).length,
+    const filteredAttendance = filter === 'all' 
+      ? monthFilteredAttendance 
+      : monthFilteredAttendance.filter(a => a.status === filter)
+  
+    // Calculate statistics for selected month
+    const stats = {
+      present: monthFilteredAttendance.filter(a => a.status === 'Present').length,
+      absent: monthFilteredAttendance.filter(a => a.status === 'Absent').length,
+      leave: monthFilteredAttendance.filter(a => a.status === 'Leave').length,
+      late: monthFilteredAttendance.filter(a => a.lateMinutes > 0).length,
+      totalWorkingDays: monthFilteredAttendance.length,
+    }
+  
+    // Calculate total working hours
+    const totalHours = monthFilteredAttendance.reduce((acc, record) => {
+      if (record.inTime && record.outTime) {
+        const hours = (new Date(record.outTime) - new Date(record.inTime)) / (1000 * 60 * 60)
+        return acc + hours
+      }
+      return acc
+    }, 0)
+  
+    const monthOptions = Array.from({ length: 12 }, (_, i) => ({
+      value: i + 1,
+      label: new Date(2000, i).toLocaleString('default', { month: 'long' })
+    }))
+  
+    const yearOptions = Array.from({ length: 5 }, (_, i) => {
+      const year = new Date().getFullYear() - 2 + i
+      return { value: year, label: year.toString() }
+    })
+  
+    const selectedMonthName = new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long' })
+  
+    return (
+      <div>
+        {/* Month/Year Filter */}
+        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-6 mb-6 border border-indigo-200">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Select Period</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              >
+                {monthOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              >
+                {yearOptions.map(option => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Status Filter</label>
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="all">All Status</option>
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+                <option value="Leave">Leave</option>
+                <option value="Holiday">Holiday</option>
+              </select>
+            </div>
+          </div>
+        </div>
+  
+        {/* Statistics */}
+        <div className="mb-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">
+            {selectedMonthName} {selectedYear} Summary
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <StatBox label="Present" value={stats.present} color="text-green-600" bgColor="bg-green-50" />
+            <StatBox label="Absent" value={stats.absent} color="text-red-600" bgColor="bg-red-50" />
+            <StatBox label="On Leave" value={stats.leave} color="text-blue-600" bgColor="bg-blue-50" />
+            <StatBox label="Late Days" value={stats.late} color="text-orange-600" bgColor="bg-orange-50" />
+            <StatBox 
+              label="Total Hours" 
+              value={totalHours.toFixed(1)} 
+              color="text-purple-600" 
+              bgColor="bg-purple-50" 
+            />
+          </div>
+        </div>
+  
+        {/* Attendance Records */}
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <h3 className="font-semibold text-gray-900">
+              Attendance Records ({filteredAttendance.length} {filteredAttendance.length === 1 ? 'record' : 'records'})
+            </h3>
+          </div>
+  
+          {filteredAttendance.length === 0 ? (
+            <div className="text-center py-12">
+              <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">No attendance records found for {selectedMonthName} {selectedYear}</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Day</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">In Time</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Out Time</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Hours</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Late</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredAttendance.sort((a, b) => new Date(b.date) - new Date(a.date)).map((record) => {
+                    const date = new Date(record.date)
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' })
+                    
+                    let workingHours = 0
+                    if (record.inTime && record.outTime) {
+                      workingHours = (new Date(record.outTime) - new Date(record.inTime)) / (1000 * 60 * 60)
+                    }
+  
+                    return (
+                      <tr key={record._id} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                          {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          <span className={`font-semibold ${
+                            dayName === 'Sat' || dayName === 'Sun' ? 'text-red-600' : 'text-gray-900'
+                          }`}>
+                            {dayName}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          {record.inTime ? new Date(record.inTime).toLocaleTimeString('en-US', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          }) : '-'}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          {record.outTime ? new Date(record.outTime).toLocaleTimeString('en-US', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          }) : '-'}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          {workingHours > 0 ? `${workingHours.toFixed(1)}h` : '-'}
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <Badge status={record.status} />
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          {record.lateMinutes > 0 ? (
+                            <span className="text-orange-600 font-semibold">{record.lateMinutes} min</span>
+                          ) : (
+                            <span className="text-green-600">On Time</span>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    )
   }
-
-  return (
-    <div>
-      {/* Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatBox label="Present" value={stats.present} color="text-green-600" bgColor="bg-green-50" />
-        <StatBox label="Absent" value={stats.absent} color="text-red-600" bgColor="bg-red-50" />
-        <StatBox label="On Leave" value={stats.leave} color="text-blue-600" bgColor="bg-blue-50" />
-        <StatBox label="Late" value={stats.late} color="text-orange-600" bgColor="bg-orange-50" />
-      </div>
-
-      {/* Filter */}
-      <div className="mb-4">
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="all">All Records</option>
-          <option value="Present">Present</option>
-          <option value="Absent">Absent</option>
-          <option value="Leave">Leave</option>
-        </select>
-      </div>
-
-      {/* Attendance Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">In Time</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Out Time</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Late (mins)</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {filteredAttendance.slice(0, 30).map((record) => (
-              <tr key={record._id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 text-sm text-gray-900">
-                  {new Date(record.date).toLocaleDateString()}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {record.inTime ? new Date(record.inTime).toLocaleTimeString() : '-'}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {record.outTime ? new Date(record.outTime).toLocaleTimeString() : '-'}
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  <Badge status={record.status} />
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {record.lateMinutes > 0 ? (
-                    <span className="text-orange-600 font-semibold">{record.lateMinutes}</span>
-                  ) : (
-                    '-'
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}
 
 // Leaves Tab
 function LeavesTab({ leaves }) {

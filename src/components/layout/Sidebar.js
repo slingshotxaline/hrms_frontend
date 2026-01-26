@@ -14,7 +14,8 @@ export default function Sidebar() {
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: Home, path: '/dashboard' },
     { id: 'employees', name: 'Employees', icon: Users, path: '/dashboard/employees', roles: ['Admin', 'HR'] },
-    { id: 'attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance' },
+    { id: 'attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Admin', 'HR'] },
+    { id: 'my-attendance', name: 'My Attendance', icon: Clock, path: '/dashboard/attendance/my-attendance', roles: ['Employee'] },
     { id: 'leaves', name: 'Leave Management', icon: Calendar, path: '/dashboard/leaves' },
     { id: 'payroll', name: 'Payroll', icon: DollarSign, path: '/dashboard/payroll', roles: ['Admin', 'HR'] },
     { id: 'holidays', name: 'Holidays', icon: FileText, path: '/dashboard/holidays' },
