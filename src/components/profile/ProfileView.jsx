@@ -64,12 +64,33 @@ export default function ProfileView() {
 
   if (loading) return <Loading />
 
+  // All users should have employee records
+  if (!employee) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg">
+          <div className="flex items-start gap-3">
+            <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+              <h3 className="text-lg font-semibold text-yellow-800">No Employee Record Found</h3>
+              <p className="text-sm text-yellow-700 mt-2">
+                Your account doesn&apos;t have an employee profile linked. Please contact HR or Admin to create your employee record.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const tabs = [
     { id: 'personal', label: 'Personal Info' },
-    { id: 'employee', label: 'Employee Details', show: !!employee },
+    { id: 'employee', label: 'Employee Details' },
     { id: 'security', label: 'Security' },
     { id: 'activity', label: 'Activity' },
-  ].filter(tab => tab.show !== false)
+  ]
 
   return (
     <div>
@@ -78,12 +99,12 @@ export default function ProfileView() {
       {/* Tabs */}
       <div className="bg-white rounded-xl shadow-lg mb-6">
         <div className="border-b border-gray-200">
-          <nav className="flex space-x-2 px-6">
+          <nav className="flex space-x-2 px-6 overflow-x-auto">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
+                className={`py-4 px-4 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -102,7 +123,7 @@ export default function ProfileView() {
               onUpdate={updateProfile}
             />
           )}
-          {activeTab === 'employee' && employee && (
+          {activeTab === 'employee' && (
             <EmployeeInfoTab employee={employee} />
           )}
           {activeTab === 'security' && (
