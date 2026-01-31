@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { Home, Users, Clock, Calendar, DollarSign, FileText, Menu, X, LogOut, ChevronRight } from 'lucide-react'
+import { Home, Users, Clock, Calendar, DollarSign, FileText, Menu, X, LogOut, ChevronRight,User } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function Sidebar() {
@@ -15,10 +15,11 @@ export default function Sidebar() {
     { id: 'dashboard', name: 'Dashboard', icon: Home, path: '/dashboard' },
     { id: 'employees', name: 'Employees', icon: Users, path: '/dashboard/employees', roles: ['Admin', 'HR'] },
     { id: 'attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Admin', 'HR'] },
-    { id: 'my-attendance', name: 'My Attendance', icon: Clock, path: '/dashboard/attendance/my-attendance', roles: ['Employee'] },
+    { id: 'my-attendance', name: 'My Attendance', icon: Clock, path: '/dashboard/my-attendance', roles: ['Employee'] },
     { id: 'leaves', name: 'Leave Management', icon: Calendar, path: '/dashboard/leaves' },
     { id: 'payroll', name: 'Payroll', icon: DollarSign, path: '/dashboard/payroll', roles: ['Admin', 'HR'] },
     { id: 'holidays', name: 'Holidays', icon: FileText, path: '/dashboard/holidays' },
+    { id: 'profile', name: 'My Profile', icon: User, path: '/dashboard/profile' },
   ]
 
   if (!user) {

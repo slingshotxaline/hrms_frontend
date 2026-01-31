@@ -1,10 +1,11 @@
 'use client'
-import { useRouter } from 'next/navigation'
-import { Edit, UserPlus, Eye } from 'lucide-react'
 
-export default function EmployeeTable({ employees, onEdit, onCreateUser }) {
+import { useRouter } from 'next/navigation'
+import { Edit, UserPlus, Eye, KeyRound } from 'lucide-react'
+
+export default function EmployeeTable({ employees, onEdit, onCreateUser, onResetPassword }) {
   const router = useRouter()
-  
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="overflow-x-auto">
@@ -27,41 +28,29 @@ export default function EmployeeTable({ employees, onEdit, onCreateUser }) {
                 <td className="px-6 py-4 text-sm text-gray-700">{employee.firstName} {employee.lastName}</td>
                 <td className="px-6 py-4 text-sm text-gray-700">{employee.department}</td>
                 <td className="px-6 py-4 text-sm text-gray-700">{employee.designation}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">${employee.basicSalary}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">${employee.basicSalary?.toLocaleString()}</td>
                 <td className="px-6 py-4 text-sm">
                   {employee.user ? (
-                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                      Active
-                    </span>
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Active</span>
                   ) : (
-                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
-                      No Account
-                    </span>
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">No Account</span>
                   )}
                 </td>
                 <td className="px-6 py-4 text-sm">
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => router.push(`/dashboard/employees/${employee._id}`)}
-                      className="text-blue-600 hover:text-blue-800"
-                      title="View Details"
-                    >
+                    <button onClick={() => router.push(`/dashboard/employees/${employee._id}`)} className="text-blue-600 hover:text-blue-800" title="View Details">
                       <Eye className="w-4 h-4" />
                     </button>
-                    <button
-                      onClick={() => onEdit(employee)}
-                      className="text-indigo-600 hover:text-indigo-800"
-                      title="Edit Employee"
-                    >
+                    <button onClick={() => onEdit(employee)} className="text-indigo-600 hover:text-indigo-800" title="Edit">
                       <Edit className="w-4 h-4" />
                     </button>
-                    {!employee.user && (
-                      <button
-                        onClick={() => onCreateUser(employee)}
-                        className="text-green-600 hover:text-green-800"
-                        title="Create User Account"
-                      >
+                    {!employee.user ? (
+                      <button onClick={() => onCreateUser(employee)} className="text-green-600 hover:text-green-800" title="Create Account">
                         <UserPlus className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <button onClick={() => onResetPassword(employee)} className="text-orange-600 hover:text-orange-800" title="Reset Password">
+                        <KeyRound className="w-4 h-4" />
                       </button>
                     )}
                   </div>

@@ -5,6 +5,7 @@ import { apiCall } from '@/lib/api'
 import EmployeeTable from './EmployeeTable'
 import EmployeeModal from './EmployeeModal'
 import CreateUserModal from './CreateUserModal'
+import ResetPasswordModal from './ResetPasswordModal'
 import SearchBar from '@/components/common/SearchBar'
 import Button from '@/components/common/Button'
 import Loading from '@/components/common/Loading'
@@ -14,6 +15,7 @@ export default function EmployeesView() {
   const [employees, setEmployees] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [showUserModal, setShowUserModal] = useState(false)
+  const [showResetModal, setShowResetModal] = useState(false)
   const [editingEmployee, setEditingEmployee] = useState(null)
   const [selectedEmployee, setSelectedEmployee] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -37,15 +39,9 @@ export default function EmployeesView() {
   const handleSave = async (formData) => {
     try {
       if (editingEmployee) {
-        await apiCall(`/employees/${editingEmployee._id}`, {
-          method: 'PUT',
-          body: JSON.stringify(formData),
-        })
+        await apiCall(`/employees/${editingEmployee._id}`, { method: 'PUT', body: JSON.stringify(formData) })
       } else {
-        await apiCall('/employees', {
-          method: 'POST',
-          body: JSON.stringify(formData),
-        })
+        await apiCall('/employees', { method: 'POST', body: JSON.stringify(formData) })
       }
       fetchEmployees()
       setShowModal(false)
@@ -57,12 +53,8 @@ export default function EmployeesView() {
 
   const handleCreateUser = async (userData) => {
     try {
-      await apiCall('/auth/register', {
-        method: 'POST',
-        body: JSON.stringify(userData),
-      })
-      
-      alert(`User account created successfully!\n\nEmail: ${userData.email}\nPassword: ${userData.password}\n\nPlease share these credentials with the employee.`)
+      await apiCall('/auth/register', { method: 'POST', body: JSON.stringify(userData) })
+      alert(`Account created!\n\nEmail: ${userData.email}\nPassword: ${userData.password}`)
       setShowUserModal(false)
       setSelectedEmployee(null)
       fetchEmployees()
@@ -71,14 +63,15 @@ export default function EmployeesView() {
     }
   }
 
-  const handleEdit = (employee) => {
-    setEditingEmployee(employee)
-    setShowModal(true)
-  }
-
-  const handleCreateUserAccount = (employee) => {
-    setSelectedEmployee(employee)
-    setShowUserModal(true)
+  const handleResetPassword = async (resetData) => {
+    try {
+      await apiCall('/auth/reset-password', { method: 'POST', body: JSON.stringify(resetData) })
+      alert('Password reset successfully!')
+      setShowResetModal(false)
+      setSelectedEmployee(null)
+    } catch (error) {
+      alert(error.message)
+    }
   }
 
   const filteredEmployees = employees.filter(emp =>
@@ -100,39 +93,24 @@ export default function EmployeesView() {
       </div>
 
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <SearchBar
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search employees..."
-        />
+        <SearchBar value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search employees..." />
       </div>
 
-      <EmployeeTable 
-        employees={filteredEmployees} 
-        onEdit={handleEdit}
-        onCreateUser={handleCreateUserAccount}
+      <EmployeeTable
+        employees={filteredEmployees}
+        onEdit={(emp) => { setEditingEmployee(emp); setShowModal(true) }}
+        onCreateUser={(emp) => { setSelectedEmployee(emp); setShowUserModal(true) }}
+        onResetPassword={(emp) => { setSelectedEmployee(emp); setShowResetModal(true) }}
       />
 
       {showModal && (
-        <EmployeeModal
-          employee={editingEmployee}
-          onClose={() => {
-            setShowModal(false)
-            setEditingEmployee(null)
-          }}
-          onSave={handleSave}
-        />
+        <EmployeeModal employee={editingEmployee} onClose={() => { setShowModal(false); setEditingEmployee(null) }} onSave={handleSave} />
       )}
-
       {showUserModal && selectedEmployee && (
-        <CreateUserModal
-          employee={selectedEmployee}
-          onClose={() => {
-            setShowUserModal(false)
-            setSelectedEmployee(null)
-          }}
-          onSubmit={handleCreateUser}
-        />
+        <CreateUserModal employee={selectedEmployee} onClose={() => { setShowUserModal(false); setSelectedEmployee(null) }} onSubmit={handleCreateUser} />
+      )}
+      {showResetModal && selectedEmployee && (
+        <ResetPasswordModal employee={selectedEmployee} onClose={() => { setShowResetModal(false); setSelectedEmployee(null) }} onSubmit={handleResetPassword} />
       )}
     </div>
   )
