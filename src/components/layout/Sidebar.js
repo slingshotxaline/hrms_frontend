@@ -32,7 +32,7 @@ export default function Sidebar() {
   )
 
   return (
-    <aside className={`${isOpen ? 'w-72' : 'w-20'} bg-linear-to-br from-red-900  to-black text-white transition-all duration-300 flex flex-col min-h-screen relative border-r border-slate-700/50 shadow-2xl`}>
+    <aside className={`${isOpen ? 'w-72' : 'w-20'} bg-black text-white transition-all duration-300 flex flex-col min-h-screen relative border-r border-slate-700/50 shadow-2xl`}>
       {/* Decorative gradient overlay */}
       <div className="absolute inset-0 bg-linear-to-br from-indigo-500/5 via-transparent to-purple-500/5 pointer-events-none" />
       
@@ -40,11 +40,11 @@ export default function Sidebar() {
       <div className="relative p-6 flex items-center justify-between border-b border-slate-700/50">
         {isOpen && (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-linear-to-br from-red-300 to-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
               <span className="text-xl font-bold">HR</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold bg-linear-to-br from-red-100 to-red-600 bg-clip-text text-transparent">HRMS Pro</h1>
+              <h1 className="text-xl font-bold bg-linear-to-br from-white to-gray-300 bg-clip-text text-transparent">HRMS Pro</h1>
               <p className="text-xs text-slate-400">Management Suite</p>
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function Sidebar() {
       <div className="relative p-4 border-t border-slate-700/50 bg-slate-800/50">
         <div className={`flex items-center gap-3 px-3 py-3 rounded-xl bg-slate-700/30 backdrop-blur-sm ${!isOpen && 'justify-center'}`}>
           <div className="relative">
-            <div className="w-11 h-11 bg-linear-to-br from-red-300 to-red-600 rounded-xl flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-500/30">
+            <div className="w-11 h-11 bg-black rounded-xl flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-500/30">
               {user.name?.charAt(0) || 'U'}
             </div>
             <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-800" />
