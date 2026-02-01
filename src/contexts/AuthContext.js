@@ -1,31 +1,80 @@
 'use client'
 
-import React, { createContext, useState, useContext } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { apiCall } from '@/lib/api'
 
 const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
-  // Initialize state from localStorage directly instead of using useEffect
-  const [user, setUser] = useState(() => {
-    if (typeof window === 'undefined') return null
-    
-    const token = localStorage.getItem('token')
-    const userData = localStorage.getItem('user')
-    
-    if (token && userData) {
-      try {
-        return JSON.parse(userData)
-      } catch (error) {
-        console.error('Failed to parse user data:', error)
-        return null
-      }
-    }
-    return null
-  })
-  
-  const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const pathname = usePathname()
+
+  // ✅ Initialize user state from localStorage on mount
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('token')
+      const userData = localStorage.getItem('user')
+      
+      if (token && userData) {
+        // Parse initial user data
+        const parsedUser = JSON.parse(userData)
+        setUser(parsedUser)
+        
+        // Fetch fresh profile data to sync role
+        try {
+          const profile = await apiCall('/auth/profile')
+          
+          const updatedUser = {
+            _id: profile._id,
+            name: profile.name,
+            email: profile.email,
+            role: profile.role,
+            employeeId: profile.employeeId,
+          }
+          
+          localStorage.setItem('user', JSON.stringify(updatedUser))
+          setUser(updatedUser)
+          
+          console.log('✅ User profile refreshed:', updatedUser.role)
+        } catch (error) {
+          console.error('Error refreshing profile:', error)
+          // Keep the cached user data if refresh fails
+        }
+      }
+      
+      setLoading(false)
+    }
+
+    initializeAuth()
+  }, []) // Only run once on mount
+
+  // ✅ Separate function for manual profile refresh
+  const refreshUserProfile = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      const profile = await apiCall('/auth/profile')
+      
+      const updatedUser = {
+        _id: profile._id,
+        name: profile.name,
+        email: profile.email,
+        role: profile.role,
+        employeeId: profile.employeeId,
+      }
+      
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+      setUser(updatedUser)
+      
+      console.log('✅ User profile refreshed:', updatedUser.role)
+    } catch (error) {
+      console.error('Error refreshing profile:', error)
+    }
+  }, [])
 
   const login = (userData, token) => {
     localStorage.setItem('token', token)
@@ -42,7 +91,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, refreshUserProfile }}>
       {children}
     </AuthContext.Provider>
   )

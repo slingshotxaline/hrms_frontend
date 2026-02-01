@@ -12,7 +12,7 @@ import BulkAssignModal from './BulkAssignModal'
 import { Users, GitBranch, Shield, UserPlus, AlertCircle } from 'lucide-react'
 
 export default function RoleManagementView() {
-  const { user } = useAuth()
+  const { user, refreshUserProfile } = useAuth() // ✅ Get refreshUserProfile
   const [users, setUsers] = useState([])
   const [hierarchy, setHierarchy] = useState([])
   const [myTeam, setMyTeam] = useState([])
@@ -78,8 +78,17 @@ export default function RoleManagementView() {
         method: 'PUT',
         body: JSON.stringify({ role: newRole }),
       })
-      fetchData()
-      alert('Role updated successfully!')
+      
+      // ✅ If the user changed their own role, refresh their profile
+      if (userId === user._id) {
+        console.log('🔄 Own role changed, refreshing profile...')
+        await refreshUserProfile()
+        alert('Your role has been updated! The page will reload.')
+        window.location.reload() // Force reload to update all components
+      } else {
+        fetchData()
+        alert('Role updated successfully!')
+      }
     } catch (error) {
       alert(error.message)
     }
@@ -91,6 +100,12 @@ export default function RoleManagementView() {
         method: 'PUT',
         body: JSON.stringify({ managerId }),
       })
+      
+      // ✅ If user assigned themselves a manager, refresh profile
+      if (userId === user._id) {
+        await refreshUserProfile()
+      }
+      
       fetchData()
       setShowAssignModal(false)
       setSelectedUser(null)
@@ -107,6 +122,12 @@ export default function RoleManagementView() {
       await apiCall(`/roles/${userId}/remove-manager`, {
         method: 'DELETE',
       })
+      
+      // ✅ If user removed their own manager, refresh profile
+      if (userId === user._id) {
+        await refreshUserProfile()
+      }
+      
       fetchData()
       alert('Manager removed successfully!')
     } catch (error) {
@@ -120,6 +141,12 @@ export default function RoleManagementView() {
         method: 'POST',
         body: JSON.stringify({ managerId, employeeIds }),
       })
+      
+      // ✅ If user assigned themselves to someone, refresh profile
+      if (employeeIds.includes(user._id)) {
+        await refreshUserProfile()
+      }
+      
       fetchData()
       setShowBulkAssignModal(false)
       alert('Employees assigned successfully!')
@@ -135,7 +162,7 @@ export default function RoleManagementView() {
       <div className="max-w-4xl mx-auto">
         <div className="bg-red-50 border-l-4 border-red-400 p-6 rounded-lg">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
+            <AlertCircle className="w-6 h-6 text-red-600 shrink-0" />
             <div>
               <h3 className="text-lg font-semibold text-red-800">Error Loading Role Management</h3>
               <p className="text-sm text-red-700 mt-2">{error}</p>
@@ -164,7 +191,7 @@ export default function RoleManagementView() {
           <p className="text-gray-600 mt-1">Manage roles and organizational hierarchy</p>
         </div>
         {(isAdmin || isHR) && users.length > 0 && (
-          <Button onClick={() => setShowBulkAssignModal(true)}>
+          <Button className='bg-black' onClick={() => setShowBulkAssignModal(true)}>
             <UserPlus className="w-5 h-5 mr-2 inline" />
             Bulk Assign
           </Button>
@@ -203,7 +230,7 @@ export default function RoleManagementView() {
       {users.length === 0 && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg mb-6">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0" />
+            <AlertCircle className="w-6 h-6 text-yellow-600 shrink-0" />
             <div>
               <h3 className="text-lg font-semibold text-yellow-800">No Users Found</h3>
               <p className="text-sm text-yellow-700 mt-2">
