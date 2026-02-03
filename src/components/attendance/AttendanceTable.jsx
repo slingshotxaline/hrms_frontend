@@ -1,12 +1,15 @@
-import { useState } from 'react'
-import Badge from '@/components/common/Badge'
-import { formatTime } from '@/lib/utils'
-import { Clock, TrendingUp, TrendingDown, Eye, Coffee } from 'lucide-react'
-import PunchDetailsModal from './PunchDetailsModal'
+import { useState } from "react";
+import Badge from "@/components/common/Badge";
+import { formatTime } from "@/lib/utils";
+import { Clock, TrendingUp, TrendingDown, Eye, Coffee } from "lucide-react";
+import PunchDetailsModal from "./PunchDetailsModal";
 
-export default function AttendanceTable({ attendance, showEmployeeColumn = false }) {
-  const [selectedRecord, setSelectedRecord] = useState(null)
-  const [showPunchModal, setShowPunchModal] = useState(false)
+export default function AttendanceTable({
+  attendance,
+  showEmployeeColumn = false,
+}) {
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [showPunchModal, setShowPunchModal] = useState(false);
 
   // Helper function to get timing badge (IN time)
   const getTimingBadge = (record) => {
@@ -20,44 +23,40 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
             {record.earlyMinutes} min early
           </span>
         </div>
-      )
+      );
     }
-    
-    if (record.timingStatus === 'On Time (Grace)' || record.usedGracePeriod) {
+
+    if (record.timingStatus === "On Time (Grace)" || record.usedGracePeriod) {
       return (
         <div className="flex flex-col items-start">
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
             On Time
           </span>
-          <span className="text-xs text-amber-600 mt-1">
-            Used grace period
-          </span>
+          <span className="text-xs text-amber-600 mt-1">Used grace period</span>
         </div>
-      )
+      );
     }
-    
-    if (record.timingStatus === 'On Time' && record.lateMinutes === 0) {
+
+    if (record.timingStatus === "On Time" && record.lateMinutes === 0) {
       return (
         <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
           On Time
         </span>
-      )
+      );
     }
-    
+
     if (record.isHalfDay) {
       return (
         <div className="flex flex-col items-start">
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
             Half Day
           </span>
-          <span className="text-xs text-gray-500 mt-1">
-            After 12:00 PM
-          </span>
+          <span className="text-xs text-gray-500 mt-1">After 12:00 PM</span>
         </div>
-      )
+      );
     }
-    
-    if (record.timingStatus === 'Late' || record.lateMinutes > 0) {
+
+    if (record.timingStatus === "Late" || record.lateMinutes > 0) {
       return (
         <div className="flex flex-col items-start">
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
@@ -67,15 +66,15 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
             {record.lateMinutes} min late
           </span>
         </div>
-      )
+      );
     }
-    
+
     return (
       <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
         -
       </span>
-    )
-  }
+    );
+  };
 
   // Helper function to get overtime/early leave badge (OUT time)
   const getOvertimeBadge = (record) => {
@@ -84,7 +83,7 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
         <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
           Not punched out
         </span>
-      )
+      );
     }
 
     if (record.hasOvertime && record.overtimeMinutes > 0) {
@@ -100,9 +99,9 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
             +{record.overtimeMinutes} min
           </span>
         </div>
-      )
+      );
     }
-    
+
     if (record.earlyLeave && record.earlyLeaveMinutes > 0) {
       return (
         <div className="flex flex-col items-start">
@@ -116,22 +115,22 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
             -{record.earlyLeaveMinutes} min
           </span>
         </div>
-      )
+      );
     }
-    
+
     // On time out
     return (
       <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 flex items-center gap-1">
         <Clock className="w-3 h-3" />
         On Time
       </span>
-    )
-  }
+    );
+  };
 
   const viewPunchDetails = (record) => {
-    setSelectedRecord(record)
-    setShowPunchModal(true)
-  }
+    setSelectedRecord(record);
+    setShowPunchModal(true);
+  };
 
   return (
     <>
@@ -141,50 +140,77 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 {showEmployeeColumn && (
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Employee</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                    Employee
+                  </th>
                 )}
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Day</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">In Time</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Out Time</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                  Date
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                  Day
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                  In Time
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                  Out Time
+                </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                   <div className="flex flex-col">
                     <span>Total Hours</span>
-                    <span className="text-xs text-gray-400 font-normal">Gross</span>
+                    <span className="text-xs text-gray-400 font-normal">
+                      Gross
+                    </span>
                   </div>
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                   <div className="flex flex-col">
                     <span>Working</span>
-                    <span className="text-xs text-gray-400 font-normal">Net</span>
+                    <span className="text-xs text-gray-400 font-normal">
+                      Net
+                    </span>
                   </div>
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                   <div className="flex flex-col">
                     <span>Breaks</span>
-                    <span className="text-xs text-gray-400 font-normal">Total</span>
+                    <span className="text-xs text-gray-400 font-normal">
+                      Total
+                    </span>
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                  Status
+                </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                   <div className="flex flex-col">
                     <span>In Timing</span>
-                    <span className="text-xs text-gray-400 font-normal">Arrival</span>
+                    <span className="text-xs text-gray-400 font-normal">
+                      Arrival
+                    </span>
                   </div>
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                   <div className="flex flex-col">
                     <span>Out Timing</span>
-                    <span className="text-xs text-gray-400 font-normal">Departure</span>
+                    <span className="text-xs text-gray-400 font-normal">
+                      Departure
+                    </span>
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {attendance.length === 0 ? (
                 <tr>
-                  <td colSpan={showEmployeeColumn ? 12 : 11} className="px-6 py-12 text-center text-gray-500">
+                  <td
+                    colSpan={showEmployeeColumn ? 12 : 11}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
                     No attendance records found for this period
                   </td>
                 </tr>
@@ -192,63 +218,95 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
                 attendance
                   .sort((a, b) => new Date(b.date) - new Date(a.date))
                   .map((record) => {
-                    const date = new Date(record.date)
-                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' })
-                    
+                    const date = new Date(record.date);
+                    const dayName = date.toLocaleDateString("en-US", {
+                      weekday: "short",
+                    });
+
                     // Gross working hours (first IN to last OUT)
-                    let grossHours = 0
+                    let grossHours = 0;
                     if (record.inTime && record.outTime) {
-                      grossHours = (new Date(record.outTime) - new Date(record.inTime)) / (1000 * 60 * 60)
+                      grossHours =
+                        (new Date(record.outTime) - new Date(record.inTime)) /
+                        (1000 * 60 * 60);
                     }
 
                     // Net working hours (excluding breaks)
-                    const netHours = (record.netWorkingMinutes || 0) / 60
-                    
+                    const netHours = (record.netWorkingMinutes || 0) / 60;
+
                     // Total break time
-                    const breakHours = (record.totalBreakMinutes || 0) / 60
+                    const breakHours = (record.totalBreakMinutes || 0) / 60;
 
                     // Punch count
-                    const punchCount = record.punches?.length || 0
+                    const punchCount = record.punches?.length || 0;
 
                     return (
-                      <tr key={record._id} className="hover:bg-gray-50 transition-colors">
+                      <tr
+                        key={record._id}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
                         {showEmployeeColumn && (
                           <td className="px-6 py-4 text-sm font-medium text-gray-900">
                             <div>
-                              <p>{record.employee?.firstName} {record.employee?.lastName}</p>
-                              <p className="text-xs text-gray-500">{record.employee?.employeeCode}</p>
+                              <p>
+                                {record.employee?.firstName}{" "}
+                                {record.employee?.lastName}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {record.employee?.employeeCode}
+                              </p>
                             </div>
                           </td>
                         )}
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          {date.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
                         </td>
                         <td className="px-6 py-4 text-sm">
-                          <span className={`font-semibold ${
-                            dayName === 'Sat' || dayName === 'Sun' ? 'text-red-600' : 'text-gray-900'
-                          }`}>
+                          <span
+                            className={`font-semibold ${
+                              dayName === "Sat" || dayName === "Sun"
+                                ? "text-red-600"
+                                : "text-gray-900"
+                            }`}
+                          >
                             {dayName}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
                           {record.inTime ? (
                             <div className="flex flex-col">
-                              <span className="font-semibold">{formatTime(record.inTime)}</span>
+                              <span className="font-semibold">
+                                {formatTime(record.inTime)}
+                              </span>
                               {punchCount > 1 && (
-                                <span className="text-xs text-blue-600">First punch</span>
+                                <span className="text-xs text-blue-600">
+                                  First punch
+                                </span>
                               )}
                             </div>
-                          ) : '-'}
+                          ) : (
+                            "-"
+                          )}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
                           {record.outTime ? (
                             <div className="flex flex-col">
-                              <span className="font-semibold">{formatTime(record.outTime)}</span>
+                              <span className="font-semibold">
+                                {formatTime(record.outTime)}
+                              </span>
                               {punchCount > 1 && (
-                                <span className="text-xs text-blue-600">Last punch</span>
+                                <span className="text-xs text-blue-600">
+                                  Last punch
+                                </span>
                               )}
                             </div>
-                          ) : '-'}
+                          ) : (
+                            "-"
+                          )}
                         </td>
                         <td className="px-6 py-4 text-sm">
                           {grossHours > 0 ? (
@@ -296,12 +354,13 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
                           >
                             <Eye className="w-4 h-4" />
                             <span className="text-xs font-semibold">
-                              {punchCount} {punchCount === 1 ? 'punch' : 'punches'}
+                              {punchCount}{" "}
+                              {punchCount === 1 ? "punch" : "punches"}
                             </span>
                           </button>
                         </td>
                       </tr>
-                    )
+                    );
                   })
               )}
             </tbody>
@@ -310,15 +369,18 @@ export default function AttendanceTable({ attendance, showEmployeeColumn = false
       </div>
 
       {/* Punch Details Modal */}
+      {/* Punch Details Modal */}
       {showPunchModal && selectedRecord && (
         <PunchDetailsModal
+          isOpen={showPunchModal}
           record={selectedRecord}
           onClose={() => {
-            setShowPunchModal(false)
-            setSelectedRecord(null)
+            console.log("Closing modal");
+            setShowPunchModal(false);
+            setSelectedRecord(null);
           }}
         />
       )}
     </>
-  )
+  );
 }

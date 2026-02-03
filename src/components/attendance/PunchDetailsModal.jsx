@@ -1,8 +1,12 @@
-import { X, Clock, LogIn, LogOut, MapPin, Smartphone } from 'lucide-react'
+'use client'
+
+import { Clock, LogIn, LogOut, MapPin, Smartphone, Coffee } from 'lucide-react'
 import Modal from '@/components/common/Modal'
 import { formatTime } from '@/lib/utils'
 
-export default function PunchDetailsModal({ record, onClose }) {
+export default function PunchDetailsModal({ isOpen, record, onClose }) {
+  if (!record) return null
+
   const punches = record.punches || []
   
   // Sort punches by timestamp
@@ -31,79 +35,90 @@ export default function PunchDetailsModal({ record, onClose }) {
 
   const grossHours = record.inTime && record.outTime 
     ? ((new Date(record.outTime) - new Date(record.inTime)) / (1000 * 60 * 60)).toFixed(1)
-    : 0
+    : '0.0'
 
   const netHours = ((record.netWorkingMinutes || 0) / 60).toFixed(1)
   const breakHours = ((record.totalBreakMinutes || 0) / 60).toFixed(1)
 
   return (
-    <Modal onClose={onClose} size="large">
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      title={`Punch Details - ${record.employee?.firstName} ${record.employee?.lastName}`}
+      size="lg"
+    >
+      {/* Employee Info */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg">
+        <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Punch Details</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              {record.employee?.firstName} {record.employee?.lastName} ({record.employee?.employeeCode})
-            </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-600">Employee Code</p>
+            <p className="text-lg font-bold text-gray-900">{record.employee?.employeeCode}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Date</p>
+            <p className="text-lg font-bold text-gray-900">
               {new Date(record.date).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+                weekday: 'short',
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
               })}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="bg-indigo-50 rounded-lg p-4 border-2 border-indigo-200">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock className="w-4 h-4 text-indigo-600" />
+            <span className="text-sm text-indigo-700 font-medium">Total Time</span>
+          </div>
+          <p className="text-2xl font-bold text-indigo-900">{grossHours}h</p>
+          <p className="text-xs text-indigo-600">First IN to Last OUT</p>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-indigo-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Clock className="w-4 h-4 text-indigo-600" />
-              <span className="text-sm text-indigo-700 font-medium">Total Time</span>
-            </div>
-            <p className="text-2xl font-bold text-indigo-900">{grossHours}h</p>
-            <p className="text-xs text-indigo-600">First IN to Last OUT</p>
+        <div className="bg-green-50 rounded-lg p-4 border-2 border-green-200">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock className="w-4 h-4 text-green-600" />
+            <span className="text-sm text-green-700 font-medium">Working Time</span>
           </div>
-
-          <div className="bg-green-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Clock className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-green-700 font-medium">Working Time</span>
-            </div>
-            <p className="text-2xl font-bold text-green-900">{netHours}h</p>
-            <p className="text-xs text-green-600">Excluding breaks</p>
-          </div>
-
-          <div className="bg-amber-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Clock className="w-4 h-4 text-amber-600" />
-              <span className="text-sm text-amber-700 font-medium">Break Time</span>
-            </div>
-            <p className="text-2xl font-bold text-amber-900">{breakHours}h</p>
-            <p className="text-xs text-amber-600">{breakPeriods.length} breaks taken</p>
-          </div>
+          <p className="text-2xl font-bold text-green-900">{netHours}h</p>
+          <p className="text-xs text-green-600">Excluding breaks</p>
         </div>
 
-        {/* Punch Timeline */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Punch Timeline</h3>
+        <div className="bg-amber-50 rounded-lg p-4 border-2 border-amber-200">
+          <div className="flex items-center gap-2 mb-1">
+            <Coffee className="w-4 h-4 text-amber-600" />
+            <span className="text-sm text-amber-700 font-medium">Break Time</span>
+          </div>
+          <p className="text-2xl font-bold text-amber-900">{breakHours}h</p>
+          <p className="text-xs text-amber-600">{breakPeriods.length} break(s) taken</p>
+        </div>
+      </div>
+
+      {/* Punch Timeline */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Clock className="w-5 h-5" />
+          Punch Timeline ({sortedPunches.length} punches)
+        </h3>
+        
+        {sortedPunches.length === 0 ? (
+          <div className="text-center py-8 bg-gray-50 rounded-lg">
+            <Clock className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+            <p className="text-gray-500">No punches recorded</p>
+          </div>
+        ) : (
           <div className="space-y-3">
             {sortedPunches.map((punch, index) => (
               <div
                 key={index}
-                className={`flex items-center gap-4 p-4 rounded-lg border-2 ${
+                className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all hover:shadow-md ${
                   punch.type === 'IN'
-                    ? 'border-green-200 bg-green-50'
-                    : 'border-red-200 bg-red-50'
+                    ? 'border-green-200 bg-green-50 hover:bg-green-100'
+                    : 'border-red-200 bg-red-50 hover:bg-red-100'
                 }`}
               >
                 <div className={`p-3 rounded-full ${
@@ -117,7 +132,7 @@ export default function PunchDetailsModal({ record, onClose }) {
                 </div>
 
                 <div className="flex-1">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <span className={`text-lg font-bold ${
                       punch.type === 'IN' ? 'text-green-900' : 'text-red-900'
                     }`}>
@@ -131,12 +146,14 @@ export default function PunchDetailsModal({ record, onClose }) {
                       Punch {punch.type}
                     </span>
                     {index === 0 && punch.type === 'IN' && (
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-200 text-blue-800">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-200 text-blue-800 flex items-center gap-1">
+                        <LogIn className="w-3 h-3" />
                         Office Entry
                       </span>
                     )}
                     {index === sortedPunches.length - 1 && punch.type === 'OUT' && (
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-200 text-purple-800">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-200 text-purple-800 flex items-center gap-1">
+                        <LogOut className="w-3 h-3" />
                         Office Exit
                       </span>
                     )}
@@ -159,43 +176,79 @@ export default function PunchDetailsModal({ record, onClose }) {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Break Periods */}
-        {breakPeriods.length > 0 && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Break Periods</h3>
-            <div className="space-y-2">
-              {breakPeriods.map((breakPeriod, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 bg-amber-50 border border-amber-200 rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                      {index + 1}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">
-                        {formatTime(breakPeriod.start)} - {formatTime(breakPeriod.end)}
-                      </p>
-                      <p className="text-xs text-gray-600">Break duration</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-amber-900">
-                      {breakPeriod.minutes} min
-                    </p>
-                    <p className="text-xs text-amber-600">
-                      {(breakPeriod.minutes / 60).toFixed(1)}h
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         )}
       </div>
+
+      {/* Break Periods */}
+      {breakPeriods.length > 0 && (
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <Coffee className="w-5 h-5" />
+            Break Periods ({breakPeriods.length})
+          </h3>
+          <div className="space-y-2">
+            {breakPeriods.map((breakPeriod, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-4 bg-amber-50 border-2 border-amber-200 rounded-lg hover:bg-amber-100 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                    {index + 1}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {formatTime(breakPeriod.start)} - {formatTime(breakPeriod.end)}
+                    </p>
+                    <p className="text-xs text-gray-600">Break duration</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xl font-bold text-amber-900">
+                    {breakPeriod.minutes} min
+                  </p>
+                  <p className="text-xs text-amber-600">
+                    {(breakPeriod.minutes / 60).toFixed(1)}h
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Summary Section */}
+      {sortedPunches.length > 0 && (
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <h4 className="font-semibold text-gray-900 mb-2">Summary</h4>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-gray-600">First Punch:</span>
+              <span className="ml-2 font-semibold text-gray-900">
+                {formatTime(sortedPunches[0].timestamp)} ({sortedPunches[0].type})
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-600">Last Punch:</span>
+              <span className="ml-2 font-semibold text-gray-900">
+                {formatTime(sortedPunches[sortedPunches.length - 1].timestamp)} ({sortedPunches[sortedPunches.length - 1].type})
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-600">Total Punches:</span>
+              <span className="ml-2 font-semibold text-gray-900">
+                {sortedPunches.length}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-600">Net Productive Time:</span>
+              <span className="ml-2 font-semibold text-green-600">
+                {netHours}h
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </Modal>
   )
 }

@@ -155,7 +155,7 @@ export default function Sidebar() {
     { id: 'leaves', name: 'Leave Management', icon: Calendar, path: '/dashboard/leaves' },
     { id: 'payroll', name: 'Payroll', icon: DollarSign, path: '/dashboard/payroll', roles: ['Admin', 'HR'] },
     { id: 'holidays', name: 'Holidays', icon: FileText, path: '/dashboard/holidays' },
-    { id: 'roles', name: 'Role Management', icon: Shield, path: '/dashboard/roles', roles: ['Admin', 'HR'] },
+    { id: 'roles', name: 'Role Management', icon: Shield, path: '/dashboard/roles', roles: ['Admin', 'HR', ] },
     { id: 'profile', name: 'My Profile', icon: User, path: '/dashboard/profile' },
   ]
 

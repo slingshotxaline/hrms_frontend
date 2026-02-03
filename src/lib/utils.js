@@ -1,17 +1,41 @@
 export const formatDate = (date) => {
+  if (!date) return '-';
+  
+  // ✅ Format date in Bangladesh timezone
   return new Date(date).toLocaleDateString('en-US', {
+    timeZone: 'Asia/Dhaka',
     year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
+    month: 'short',
+    day: 'numeric'
+  });
+};
 
 export const formatTime = (date) => {
+  if (!date) return '-';
+  
+  // ✅ Format time in Bangladesh timezone
   return new Date(date).toLocaleTimeString('en-US', {
+    timeZone: 'Asia/Dhaka',
     hour: '2-digit',
     minute: '2-digit',
-  })
-}
+    hour12: true
+  });
+};
+
+export const formatDateTime = (date) => {
+  if (!date) return '-';
+  
+  // ✅ Format full datetime in Bangladesh timezone
+  return new Date(date).toLocaleString('en-US', {
+    timeZone: 'Asia/Dhaka',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+};
 
 export const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-US', {

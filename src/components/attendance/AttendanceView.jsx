@@ -6,7 +6,7 @@ import { apiCall } from '@/lib/api'
 import AttendanceTable from './AttendanceTable'
 import Button from '@/components/common/Button'
 import Loading from '@/components/common/Loading'
-import { Clock, Calendar as CalendarIcon } from 'lucide-react'
+import { Clock, Calendar as CalendarIcon, Download, Filter } from 'lucide-react'
 import MarkAttendanceModal from './MarkAttendanceModal'
 
 export default function AttendanceView() {
@@ -14,31 +14,40 @@ export default function AttendanceView() {
   const [attendance, setAttendance] = useState([])
   const [employees, setEmployees] = useState([])
   const [myEmployee, setMyEmployee] = useState(null)
-  const [userRole, setUserRole] = useState(null) // ✅ Store the actual role
+  const [userRole, setUserRole] = useState(null)
+  
+  // ✅ Date filters - DEFAULT TO TODAY
+  const getTodayDate = () => new Date().toISOString().split('T')[0]
+  
+  const [startDate, setStartDate] = useState(getTodayDate())
+  const [endDate, setEndDate] = useState(getTodayDate())
+  
+  // Legacy month/year filters
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  
+  // Filter view type: 'date' or 'month'
+  const [filterType, setFilterType] = useState('date')
+  
   const [filterEmployee, setFilterEmployee] = useState('all')
   const [showMarkModal, setShowMarkModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchData()
-  }, [selectedMonth, selectedYear])
+  }, [startDate, endDate, selectedMonth, selectedYear, filterType])
 
   const fetchData = async () => {
     setLoading(true)
     try {
       console.log('🔍 Fetching attendance data...')
       
-      // Get fresh profile data
       const profile = await apiCall('/auth/profile')
       console.log('👤 User profile:', profile)
       console.log('🎭 User role from profile:', profile.role)
       
-      // ✅ Set the actual role from profile
       setUserRole(profile.role)
       
-      // Determine role-based permissions using PROFILE ROLE
       const isAdmin = profile.role === 'Admin'
       const isHR = profile.role === 'HR'
       const isLeader = ['Business Lead', 'Team Lead'].includes(profile.role)
@@ -46,18 +55,25 @@ export default function AttendanceView() {
       
       console.log('✅ Permissions:', { isAdmin, isHR, isLeader, canSeeAll })
       
-      // Calculate date range for selected month/year
-      const startDate = new Date(selectedYear, selectedMonth - 1, 1).toISOString().split('T')[0]
-      const endDate = new Date(selectedYear, selectedMonth, 0).toISOString().split('T')[0]
+      // Calculate date range based on filter type
+      let queryStartDate, queryEndDate
       
-      console.log('📅 Date range:', { startDate, endDate })
+      if (filterType === 'date') {
+        queryStartDate = startDate
+        queryEndDate = endDate
+      } else {
+        // Month-based filter
+        queryStartDate = new Date(selectedYear, selectedMonth - 1, 1).toISOString().split('T')[0]
+        queryEndDate = new Date(selectedYear, selectedMonth, 0).toISOString().split('T')[0]
+      }
+      
+      console.log('📅 Date range:', { queryStartDate, queryEndDate, filterType })
       
       if (canSeeAll) {
-        // Admin/HR can see all employees
         console.log('✅ Admin/HR - Fetching all employees')
         
         const [attendanceData, employeesData] = await Promise.all([
-          apiCall(`/attendance?startDate=${startDate}&endDate=${endDate}`),
+          apiCall(`/attendance?startDate=${queryStartDate}&endDate=${queryEndDate}`),
           apiCall('/employees'),
         ])
         
@@ -67,23 +83,18 @@ export default function AttendanceView() {
         setAttendance(attendanceData)
         setEmployees(employeesData)
         
-        // Get their own employee record if exists
         if (profile.employeeId) {
           const empData = await apiCall(`/employees/${profile.employeeId._id || profile.employeeId}`)
           setMyEmployee(empData)
         }
         
       } else if (isLeader) {
-        // Leaders can see their team + their own
         console.log('👔 Leader - Fetching team data')
         
         try {
           const teamData = await apiCall('/roles/my-team')
           console.log('👥 My team data:', teamData)
-          console.log('📋 Team size:', teamData.teamSize)
-          console.log('👥 Team members:', teamData.team)
           
-          // Get my employee record
           let myEmpData = null
           if (profile.employeeId) {
             myEmpData = await apiCall(`/employees/${profile.employeeId._id || profile.employeeId}`)
@@ -91,26 +102,18 @@ export default function AttendanceView() {
             console.log('✅ My employee record:', myEmpData.employeeCode)
           }
           
-          // Build list of employee IDs to fetch attendance for
           const teamMembers = teamData.team || []
-          console.log('📋 Processing team members:', teamMembers.length)
-          
-          // Extract employee IDs from team members
           const teamEmployeeIds = []
           const teamEmployeeRecords = []
           
           for (const member of teamMembers) {
-            console.log('🔍 Team member:', member.name, 'Employee ID:', member.employeeId)
-            
             if (member.employeeId) {
               const empId = member.employeeId._id || member.employeeId
               teamEmployeeIds.push(empId)
               
-              // If employeeId is populated, add it directly
               if (member.employeeId.firstName) {
                 teamEmployeeRecords.push(member.employeeId)
               } else {
-                // Otherwise fetch the full employee record
                 try {
                   const empRecord = await apiCall(`/employees/${empId}`)
                   teamEmployeeRecords.push(empRecord)
@@ -121,64 +124,47 @@ export default function AttendanceView() {
             }
           }
           
-          console.log('✅ Team employee IDs:', teamEmployeeIds)
-          
-          // Add my own employee ID if exists
           const allEmployeeIds = myEmpData 
             ? [myEmpData._id, ...teamEmployeeIds]
             : teamEmployeeIds
           
           console.log('🔍 Fetching attendance for employee IDs:', allEmployeeIds)
           
-          // Fetch attendance for all employees
           if (allEmployeeIds.length > 0) {
-            const attendancePromises = allEmployeeIds.map(empId => {
-              console.log('📊 Fetching attendance for employee:', empId)
-              return apiCall(`/attendance?employeeId=${empId}&startDate=${startDate}&endDate=${endDate}`)
-            })
+            const attendancePromises = allEmployeeIds.map(empId => 
+              apiCall(`/attendance?employeeId=${empId}&startDate=${queryStartDate}&endDate=${queryEndDate}`)
+            )
             
             const attendanceResults = await Promise.all(attendancePromises)
             const allAttendance = attendanceResults.flat()
             
             console.log('✅ Total attendance records:', allAttendance.length)
-            console.log('📊 Attendance breakdown:', allAttendance.map(a => ({
-              employee: a.employee?.firstName + ' ' + a.employee?.lastName,
-              date: a.date,
-              status: a.status
-            })))
-            
             setAttendance(allAttendance)
           } else {
-            console.log('⚠️ No employee IDs found')
             setAttendance([])
           }
           
-          // Build employees list
           const allEmployees = myEmpData 
             ? [myEmpData, ...teamEmployeeRecords]
             : teamEmployeeRecords
           
           console.log('👥 Total employees list:', allEmployees.length)
-          console.log('👥 Employees:', allEmployees.map(e => e.firstName + ' ' + e.lastName))
           setEmployees(allEmployees)
           
         } catch (error) {
           console.error('❌ Error fetching team data:', error)
-          alert('Error loading team data: ' + error.message)
           
-          // If team fetch fails, at least show own data
           if (profile.employeeId) {
             const empData = await apiCall(`/employees/${profile.employeeId._id || profile.employeeId}`)
             setMyEmployee(empData)
             
-            const attendanceData = await apiCall(`/attendance?employeeId=${empData._id}&startDate=${startDate}&endDate=${endDate}`)
+            const attendanceData = await apiCall(`/attendance?employeeId=${empData._id}&startDate=${queryStartDate}&endDate=${queryEndDate}`)
             setAttendance(attendanceData)
             setEmployees([empData])
           }
         }
         
       } else {
-        // Regular employees see only their own
         console.log('👤 Regular employee - Fetching own data')
         
         if (!profile.employeeId) {
@@ -189,7 +175,7 @@ export default function AttendanceView() {
         
         const [empData, attendanceData] = await Promise.all([
           apiCall(`/employees/${profile.employeeId._id || profile.employeeId}`),
-          apiCall(`/attendance?employeeId=${profile.employeeId._id || profile.employeeId}&startDate=${startDate}&endDate=${endDate}`),
+          apiCall(`/attendance?employeeId=${profile.employeeId._id || profile.employeeId}&startDate=${queryStartDate}&endDate=${queryEndDate}`),
         ])
         
         console.log('✅ Own attendance:', attendanceData.length)
@@ -224,20 +210,148 @@ export default function AttendanceView() {
     }
   }
 
+  // ✅ FIXED: Quick date range presets
+  const applyDatePreset = (preset) => {
+    const today = new Date()
+    let start, end
+    
+    switch(preset) {
+      case 'today':
+        start = today.toISOString().split('T')[0]
+        end = today.toISOString().split('T')[0]
+        break
+        
+      case 'yesterday':
+        const yesterday = new Date(today)
+        yesterday.setDate(today.getDate() - 1)
+        start = yesterday.toISOString().split('T')[0]
+        end = yesterday.toISOString().split('T')[0]
+        break
+        
+      case 'thisWeek':
+        const weekStart = new Date(today)
+        const dayOfWeek = today.getDay()
+        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek // Monday as first day
+        weekStart.setDate(today.getDate() + diff)
+        start = weekStart.toISOString().split('T')[0]
+        end = today.toISOString().split('T')[0]
+        break
+        
+      case 'lastWeek':
+        const lastWeekEnd = new Date(today)
+        const currentDayOfWeek = today.getDay()
+        const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
+        lastWeekEnd.setDate(today.getDate() - daysToLastSunday)
+        
+        const lastWeekStart = new Date(lastWeekEnd)
+        lastWeekStart.setDate(lastWeekEnd.getDate() - 6)
+        
+        start = lastWeekStart.toISOString().split('T')[0]
+        end = lastWeekEnd.toISOString().split('T')[0]
+        break
+        
+      case 'thisMonth':
+        start = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0]
+        end = today.toISOString().split('T')[0]
+        break
+        
+      case 'lastMonth':
+        const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
+        start = lastMonth.toISOString().split('T')[0]
+        const lastDayOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0)
+        end = lastDayOfLastMonth.toISOString().split('T')[0]
+        break
+        
+      case 'last7days':
+        const sevenDaysAgo = new Date(today)
+        sevenDaysAgo.setDate(today.getDate() - 6)
+        start = sevenDaysAgo.toISOString().split('T')[0]
+        end = today.toISOString().split('T')[0]
+        break
+        
+      case 'last30days':
+        const thirtyDaysAgo = new Date(today)
+        thirtyDaysAgo.setDate(today.getDate() - 29)
+        start = thirtyDaysAgo.toISOString().split('T')[0]
+        end = today.toISOString().split('T')[0]
+        break
+        
+      default:
+        return
+    }
+    
+    console.log(`📅 Applying preset "${preset}":`, { start, end })
+    
+    setStartDate(start)
+    setEndDate(end)
+    setFilterType('date')
+  }
+
+  // Export to CSV
+  const exportToCSV = () => {
+    if (filteredAttendance.length === 0) {
+      alert('No data to export')
+      return
+    }
+
+    const headers = ['Employee Code', 'Name', 'Date', 'Day', 'In Time', 'Out Time', 'Total Hours', 'Working Hours', 'Break Time', 'Status', 'In Timing', 'Out Timing', 'Punches']
+    
+    const rows = filteredAttendance.map(record => {
+      const date = new Date(record.date)
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' })
+      const grossHours = record.inTime && record.outTime 
+        ? ((new Date(record.outTime) - new Date(record.inTime)) / (1000 * 60 * 60)).toFixed(1)
+        : '0'
+      const netHours = ((record.netWorkingMinutes || 0) / 60).toFixed(1)
+      const breakHours = ((record.totalBreakMinutes || 0) / 60).toFixed(1)
+      const punchCount = record.punches?.length || 0
+      
+      return [
+        record.employee?.employeeCode || '',
+        `${record.employee?.firstName || ''} ${record.employee?.lastName || ''}`,
+        date.toLocaleDateString(),
+        dayName,
+        record.inTime ? new Date(record.inTime).toLocaleTimeString() : '-',
+        record.outTime ? new Date(record.outTime).toLocaleTimeString() : '-',
+        grossHours,
+        netHours,
+        breakHours,
+        record.status,
+        record.timingStatus || '-',
+        record.hasOvertime ? `Overtime +${record.overtimeMinutes}min` : record.earlyLeave ? `Early Leave -${record.earlyLeaveMinutes}min` : 'On Time',
+        punchCount
+      ]
+    })
+
+    const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `attendance-${startDate}-to-${endDate}.csv`
+    a.click()
+    window.URL.revokeObjectURL(url)
+  }
+
   if (loading) return <Loading />
 
-  // Use the role from state (fetched from profile)
   const isAdmin = userRole === 'Admin'
   const isHR = userRole === 'HR'
   const isLeader = ['Business Lead', 'Team Lead'].includes(userRole)
   const canSeeAll = isAdmin || isHR
 
-  // Filter attendance based on selected employee
   const filteredAttendance = filterEmployee === 'all' 
     ? attendance 
     : attendance.filter(a => a.employee?._id === filterEmployee)
 
-  const monthName = new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long' })
+  // Format display date range
+  const displayStartDate = filterType === 'date' 
+    ? new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : new Date(selectedYear, selectedMonth - 1, 1).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    
+  const displayEndDate = filterType === 'date'
+    ? new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : new Date(selectedYear, selectedMonth, 0).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
   return (
     <div>
@@ -250,80 +364,222 @@ export default function AttendanceView() {
              'View your attendance records'}
           </p>
         </div>
-        <Button onClick={() => setShowMarkModal(true)}>
-          <Clock className="w-5 h-5 mr-2 inline" />
-          Mark Attendance
-        </Button>
+        <div className="flex gap-3">
+          <Button onClick={exportToCSV} variant="outline">
+            <Download className="w-5 h-5 mr-2 inline" />
+            Export CSV
+          </Button>
+          <Button onClick={() => setShowMarkModal(true)}>
+            <Clock className="w-5 h-5 mr-2 inline" />
+            Mark Attendance
+          </Button>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Month Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
-            <select
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(Number(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+      {/* Filter Tabs */}
+      <div className="bg-white rounded-xl shadow-lg mb-6">
+        <div className="border-b border-gray-200">
+          <nav className="flex gap-2 px-6">
+            <button
+              onClick={() => setFilterType('date')}
+              className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
+                filterType === 'date'
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
             >
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {new Date(2000, i).toLocaleString('default', { month: 'long' })}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Year Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              <CalendarIcon className="w-4 h-4" />
+              Date Range
+            </button>
+            <button
+              onClick={() => setFilterType('month')}
+              className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
+                filterType === 'month'
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
             >
-              {Array.from({ length: 5 }, (_, i) => {
-                const year = new Date().getFullYear() - 2 + i
-                return (
-                  <option key={year} value={year}>{year}</option>
-                )
-              })}
-            </select>
-          </div>
-
-          {/* Employee Filter */}
-          {(canSeeAll || (isLeader && employees.length > 1)) && (
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Filter by Employee
-              </label>
-              <select
-                value={filterEmployee}
-                onChange={(e) => setFilterEmployee(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="all">All {isLeader ? 'Team Members' : 'Employees'}</option>
-                {employees.map((emp) => (
-                  <option key={emp._id} value={emp._id}>
-                    {emp.firstName} {emp.lastName} ({emp.employeeCode})
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+              <Filter className="w-4 h-4" />
+              Month View
+            </button>
+          </nav>
         </div>
 
-        {/* Date Range Info */}
-        <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
-          <CalendarIcon className="w-4 h-4" />
-          <span>
-            Showing: {monthName} {selectedYear}
-          </span>
-          <span className="text-gray-400">•</span>
-          <span className="text-indigo-600 font-medium">
-            {filteredAttendance.length} records
-          </span>
+        <div className="p-6">
+          {filterType === 'date' ? (
+            <>
+              {/* Date Range Filter */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    max={endDate}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    min={startDate}
+                    max={new Date().toISOString().split('T')[0]}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+
+                {(canSeeAll || (isLeader && employees.length > 1)) && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Employee</label>
+                    <select
+                      value={filterEmployee}
+                      onChange={(e) => setFilterEmployee(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    >
+                      <option value="all">All {isLeader ? 'Team Members' : 'Employees'}</option>
+                      {employees.map((emp) => (
+                        <option key={emp._id} value={emp._id}>
+                          {emp.firstName} {emp.lastName} ({emp.employeeCode})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              {/* Quick Date Presets */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <CalendarIcon className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">Quick Select:</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => applyDatePreset('today')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    Today
+                  </button>
+                  <button
+                    onClick={() => applyDatePreset('yesterday')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    Yesterday
+                  </button>
+                  <button
+                    onClick={() => applyDatePreset('last7days')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    Last 7 Days
+                  </button>
+                  <button
+                    onClick={() => applyDatePreset('thisWeek')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    This Week
+                  </button>
+                  <button
+                    onClick={() => applyDatePreset('lastWeek')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    Last Week
+                  </button>
+                  <button
+                    onClick={() => applyDatePreset('thisMonth')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    This Month
+                  </button>
+                  <button
+                    onClick={() => applyDatePreset('lastMonth')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    Last Month
+                  </button>
+                  <button
+                    onClick={() => applyDatePreset('last30days')}
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                  >
+                    Last 30 Days
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            /* Month View Filter */
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {new Date(2000, i).toLocaleString('default', { month: 'long' })}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(Number(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const year = new Date().getFullYear() - 2 + i
+                    return (
+                      <option key={year} value={year}>{year}</option>
+                    )
+                  })}
+                </select>
+              </div>
+
+              {(canSeeAll || (isLeader && employees.length > 1)) && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Employee</label>
+                  <select
+                    value={filterEmployee}
+                    onChange={(e) => setFilterEmployee(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="all">All {isLeader ? 'Team Members' : 'Employees'}</option>
+                    {employees.map((emp) => (
+                      <option key={emp._id} value={emp._id}>
+                        {emp.firstName} {emp.lastName} ({emp.employeeCode})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Date Range Info */}
+          <div className="mt-4 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-200">
+            <div className="flex items-center gap-3 text-sm">
+              <CalendarIcon className="w-5 h-5 text-indigo-600" />
+              <div>
+                <span className="text-gray-700 font-medium">Showing: </span>
+                <span className="text-indigo-900 font-bold">{displayStartDate}</span>
+                <span className="text-gray-500 mx-2">to</span>
+                <span className="text-indigo-900 font-bold">{displayEndDate}</span>
+                <span className="text-gray-400 mx-2">•</span>
+                <span className="text-indigo-600 font-bold">
+                  {filteredAttendance.length} {filteredAttendance.length === 1 ? 'record' : 'records'}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -389,3 +645,4 @@ function StatCard({ label, value, color }) {
     </div>
   )
 }
+
