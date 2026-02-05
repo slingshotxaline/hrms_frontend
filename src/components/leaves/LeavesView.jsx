@@ -257,7 +257,7 @@ export default function LeavesView() {
 
       {/* Leave Balance (for employees) */}
       {myEmployee && (
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-lg p-6 mb-6">
+        <div className="bg-black rounded-xl shadow-lg p-6 mb-6">
           <h2 className="text-xl font-bold text-white mb-4">
             Your Leave Balance
           </h2>
@@ -331,13 +331,13 @@ function StatCard({ label, value, color, icon: Icon }) {
   );
 }
 
-function BalanceCard({ label, value, total, isUnpaid }) {
+export function BalanceCard({ label, value, total, isUnpaid }) {
   const percentage = isUnpaid ? 100 : (value / total) * 100;
 
   return (
     <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-30">
-      <p className="text-sm text-white text-opacity-90 mb-2">{label}</p>
-      <p className="text-2xl font-bold text-white mb-2">
+      <p className="text-sm text-black text-opacity-90 mb-2">{label}</p>
+      <p className="text-2xl font-bold text-black mb-2">
         {isUnpaid ? value : `${value} / ${total}`}
       </p>
       {!isUnpaid && (

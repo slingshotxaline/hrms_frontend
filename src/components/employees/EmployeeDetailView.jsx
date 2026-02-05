@@ -11,6 +11,8 @@ import {
   Clock, FileText, TrendingUp, AlertCircle, Edit
 } from 'lucide-react'
 import { TbCurrencyTaka } from "react-icons/tb";
+import { BalanceCard } from '../leaves/LeavesView'
+import LeaveTable from '../leaves/LeaveTable'
 
 export default function EmployeeDetailView({ employeeId }) {
   const router = useRouter()
@@ -172,7 +174,7 @@ export default function EmployeeDetailView({ employeeId }) {
             />
           )}
           {activeTab === 'attendance' && <AttendanceTab attendance={attendance} employeeId={employeeId} />}
-          {activeTab === 'leaves' && <LeavesTab leaves={leaves} />}
+          {activeTab === 'leaves' && <LeavesTab leaves={leaves} myEmployee={employee}  />}
           {activeTab === 'payroll' && <PayrollTab payrolls={payrolls} employee={employee} />}
         </div>
       </div>
@@ -506,83 +508,45 @@ function AttendanceTab({ attendance, employeeId }) {
   }
 
 // Leaves Tab
-function LeavesTab({ leaves }) {
-  const leaveBalance = {
-    CL: 12,
-    SL: 10,
-    EL: 15,
-  }
-
-  const leavesTaken = leaves
-    .filter(l => l.status === 'Approved')
-    .reduce((acc, leave) => {
-      const start = new Date(leave.startDate)
-      const end = new Date(leave.endDate)
-      const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1
-      
-      if (!acc[leave.leaveType]) acc[leave.leaveType] = 0
-      acc[leave.leaveType] += days
-      
-      return acc
-    }, {})
-
+function LeavesTab({ leaves, myEmployee }) {
   return (
     <div>
-      {/* Leave Balance */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {Object.entries(leaveBalance).map(([type, total]) => {
-          const taken = leavesTaken[type] || 0
-          const remaining = total - taken
-          const percentage = (taken / total) * 100
+      {/* ✅ Leave Balance */}
+      {myEmployee && (
+        <div className="bg-black rounded-xl shadow-lg p-6 mb-6">
+          {/* <h2 className="text-xl font-bold text-white mb-4">
+            Your Leave Balance
+          </h2> */}
 
-          return (
-            <div key={type} className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
-              <h4 className="font-semibold text-gray-900 mb-2">
-                {type === 'CL' ? 'Casual Leave' : type === 'SL' ? 'Sick Leave' : 'Earned Leave'}
-              </h4>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-3xl font-bold text-indigo-600">{remaining}</span>
-                <span className="text-gray-600">/ {total} days</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                <div 
-                  className="bg-indigo-600 h-2 rounded-full transition-all"
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-              <p className="text-xs text-gray-600">{taken} days used</p>
-            </div>
-          )
-        })}
-      </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <BalanceCard
+              label="Casual Leave"
+              value={myEmployee.leaveBalance?.casual ?? 12}
+              total={12}
+            />
+            <BalanceCard
+              label="Sick Leave"
+              value={myEmployee.leaveBalance?.sick ?? 12}
+              total={12}
+            />
+            <BalanceCard
+              label="Earned Leave"
+              value={myEmployee.leaveBalance?.earned ?? 15}
+              total={15}
+            />
+            <BalanceCard
+              label="Unpaid Leave"
+              value="Unlimited"
+              isUnpaid
+            />
+          </div>
+        </div>
+      )}
 
-      {/* Leave History */}
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Leave History</h3>
-      <div className="space-y-3">
-        {leaves.map((leave) => {
-          const start = new Date(leave.startDate)
-          const end = new Date(leave.endDate)
-          const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1
-
-          return (
-            <div key={leave._id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <span className="font-semibold text-gray-900">{leave.leaveType}</span>
-                  <span className="text-gray-600 ml-2">• {days} day{days > 1 ? 's' : ''}</span>
-                </div>
-                <Badge status={leave.status} />
-              </div>
-              <p className="text-sm text-gray-600 mb-2">
-                {start.toLocaleDateString()} - {end.toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-700">{leave.reason}</p>
-            </div>
-          )
-        })}
-      </div>
+      {/* Leave Table */}
+      <LeaveTable leaves={leaves} />
     </div>
-  )
+  );
 }
 
 // Payroll Tab
