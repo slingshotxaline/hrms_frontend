@@ -45,7 +45,7 @@ export default function AdminInfoTab({ profile, employee }) {
     <div className="max-w-4xl mx-auto">
       {/* Role Badge */}
       <div className={`bg-gradient-to-r ${
-        isAdmin ? 'from-red-500 to-orange-500' : 'from-blue-500 to-cyan-500'
+        isAdmin ? 'from-black to-gray-900' : 'from-blue-500 to-cyan-500'
       } rounded-xl p-6 mb-8 text-white`}>
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">

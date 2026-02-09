@@ -1,7 +1,14 @@
 import { useState } from "react";
 import Badge from "@/components/common/Badge";
 import { formatTime } from "@/lib/utils";
-import { Clock, TrendingUp, TrendingDown, Eye, Coffee } from "lucide-react";
+import {
+  Clock,
+  TrendingUp,
+  TrendingDown,
+  Eye,
+  Coffee,
+  Calendar,
+} from "lucide-react";
 import PunchDetailsModal from "./PunchDetailsModal";
 
 export default function AttendanceTable({
@@ -13,6 +20,20 @@ export default function AttendanceTable({
 
   // Helper function to get timing badge (IN time)
   const getTimingBadge = (record) => {
+    // ✅ Check if it's off-day work first
+    if (record.isOffDayWork || record.timingStatus === "Off-Day Overtime") {
+      return (
+        <div className="flex flex-col items-start">
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border-2 border-purple-300">
+            🎉 Off-Day Work
+          </span>
+          <span className="text-xs text-purple-600 mt-1 font-semibold">
+            Full Day Overtime
+          </span>
+        </div>
+      );
+    }
+
     if (record.isEarly) {
       return (
         <div className="flex flex-col items-start">
@@ -86,6 +107,24 @@ export default function AttendanceTable({
       );
     }
 
+    // ✅ Off-Day Work - Show total working time as overtime
+    if (record.isOffDayWork || record.timingStatus === "Off-Day Overtime") {
+      const overtimeHours = ((record.overtimeMinutes || 0) / 60).toFixed(1);
+      return (
+        <div className="flex flex-col items-start">
+          <div className="flex items-center gap-1">
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 flex items-center gap-1 border-2 border-purple-300">
+              <TrendingUp className="w-3 h-3" />
+              Full Day OT
+            </span>
+          </div>
+          <span className="text-xs text-purple-600 mt-1 font-bold">
+            +{record.overtimeMinutes} min ({overtimeHours}h)
+          </span>
+        </div>
+      );
+    }
+
     if (record.hasOvertime && record.overtimeMinutes > 0) {
       return (
         <div className="flex flex-col items-start">
@@ -118,7 +157,6 @@ export default function AttendanceTable({
       );
     }
 
-    // On time out
     return (
       <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 flex items-center gap-1">
         <Clock className="w-3 h-3" />
@@ -127,7 +165,8 @@ export default function AttendanceTable({
     );
   };
 
-  const viewPunchDetails = (record) => {
+  const handleViewPunches = (record) => {
+    console.log("Opening punch details for:", record);
     setSelectedRecord(record);
     setShowPunchModal(true);
   };
@@ -223,7 +262,6 @@ export default function AttendanceTable({
                       weekday: "short",
                     });
 
-                    // Gross working hours (first IN to last OUT)
                     let grossHours = 0;
                     if (record.inTime && record.outTime) {
                       grossHours =
@@ -231,19 +269,20 @@ export default function AttendanceTable({
                         (1000 * 60 * 60);
                     }
 
-                    // Net working hours (excluding breaks)
                     const netHours = (record.netWorkingMinutes || 0) / 60;
-
-                    // Total break time
                     const breakHours = (record.totalBreakMinutes || 0) / 60;
-
-                    // Punch count
                     const punchCount = record.punches?.length || 0;
+
+                    // ✅ Check if it's weekend or off-day
+                    const isWeekendDay = dayName === "Fri" || dayName === "Sat";
+                    const isOffDay = record.isOffDay || record.isOffDayWork;
 
                     return (
                       <tr
                         key={record._id}
-                        className="hover:bg-gray-50 transition-colors"
+                        className={`hover:bg-gray-50 transition-colors ${
+                          isOffDay ? "bg-purple-50" : ""
+                        }`}
                       >
                         {showEmployeeColumn && (
                           <td className="px-6 py-4 text-sm font-medium text-gray-900">
@@ -259,18 +298,37 @@ export default function AttendanceTable({
                           </td>
                         )}
                         <td className="px-6 py-4 text-sm text-gray-700">
-                          {date.toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          <div className="flex items-center gap-2">
+                            {date.toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                            {isOffDay && (
+                              <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-semibold">
+                                Off-Day
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-700">
+                          <div className="flex items-center gap-2">
+                            {date.toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                            {isOffDay && (
+                              <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-semibold">
+                                Off-Day
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 text-sm">
                           <span
                             className={`font-semibold ${
-                              dayName === "Sat" || dayName === "Sun"
-                                ? "text-red-600"
-                                : "text-gray-900"
+                              isWeekendDay ? "text-red-600" : "text-gray-900"
                             }`}
                           >
                             {dayName}
@@ -310,7 +368,11 @@ export default function AttendanceTable({
                         </td>
                         <td className="px-6 py-4 text-sm">
                           {grossHours > 0 ? (
-                            <span className="font-semibold text-indigo-600">
+                            <span
+                              className={`font-semibold ${
+                                isOffDay ? "text-purple-600" : "text-indigo-600"
+                              }`}
+                            >
                               {grossHours.toFixed(1)}h
                             </span>
                           ) : (
@@ -319,7 +381,11 @@ export default function AttendanceTable({
                         </td>
                         <td className="px-6 py-4 text-sm">
                           {netHours > 0 ? (
-                            <span className="font-semibold text-green-600">
+                            <span
+                              className={`font-semibold ${
+                                isOffDay ? "text-purple-600" : "text-green-600"
+                              }`}
+                            >
                               {netHours.toFixed(1)}h
                             </span>
                           ) : (
@@ -349,7 +415,7 @@ export default function AttendanceTable({
                         </td>
                         <td className="px-6 py-4 text-sm">
                           <button
-                            onClick={() => viewPunchDetails(record)}
+                            onClick={() => handleViewPunches(record)}
                             className="flex items-center gap-1 px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors"
                           >
                             <Eye className="w-4 h-4" />
@@ -368,8 +434,6 @@ export default function AttendanceTable({
         </div>
       </div>
 
-      {/* Punch Details Modal */}
-      {/* Punch Details Modal */}
       {showPunchModal && selectedRecord && (
         <PunchDetailsModal
           isOpen={showPunchModal}

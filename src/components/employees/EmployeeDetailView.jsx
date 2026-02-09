@@ -215,7 +215,16 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
         <InfoRow 
           icon={Calendar} 
           label="Joining Date" 
-          value={new Date(employee.joiningDate).toLocaleDateString('en-US', {
+          value={new Date(employee.dateOfJoining).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })} 
+        />
+        <InfoRow 
+          icon={Calendar} 
+          label="Date Of Birth" 
+          value={new Date(employee.dateOfBirth).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'

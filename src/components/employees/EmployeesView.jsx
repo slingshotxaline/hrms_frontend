@@ -1,117 +1,342 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { apiCall } from '@/lib/api'
-import EmployeeTable from './EmployeeTable'
-import EmployeeModal from './EmployeeModal'
-import CreateUserModal from './CreateUserModal'
-import ResetPasswordModal from './ResetPasswordModal'
-import SearchBar from '@/components/common/SearchBar'
-import Button from '@/components/common/Button'
-import Loading from '@/components/common/Loading'
-import { Plus } from 'lucide-react'
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { apiCall } from "@/lib/api";
+import Button from "@/components/common/Button";
+import Loading from "@/components/common/Loading";
+import EmployeeTable from "./EmployeeTable";
+import EmployeeModal from "./EmployeeModal";
+import CreateUserModal from "./CreateUserModal";
+import ResetPasswordModal from "./ResetPasswordModal";
+import SearchBar from "@/components/common/SearchBar";
+import { UserPlus, Users, Download } from "lucide-react";
 
 export default function EmployeesView() {
-  const [employees, setEmployees] = useState([])
-  const [showModal, setShowModal] = useState(false)
-  const [showUserModal, setShowUserModal] = useState(false)
-  const [showResetModal, setShowResetModal] = useState(false)
-  const [editingEmployee, setEditingEmployee] = useState(null)
-  const [selectedEmployee, setSelectedEmployee] = useState(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [loading, setLoading] = useState(true)
+  const { user } = useAuth();
+  const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+  const isAdmin = user?.role === "Admin";
+  const isHR = user?.role === "HR";
+  const canManage = isAdmin || isHR;
 
   useEffect(() => {
-    fetchEmployees()
-  }, [])
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    filterEmployees();
+  }, [searchQuery, employees]);
 
   const fetchEmployees = async () => {
     try {
-      const data = await apiCall('/employees')
-      setEmployees(data)
+      setLoading(true);
+      const data = await apiCall("/employees");
+      console.log("✅ Employees loaded:", data.length);
+      setEmployees(data);
+      setFilteredEmployees(data);
     } catch (error) {
-      console.error('Error fetching employees:', error)
+      console.error("❌ Error fetching employees:", error);
+      alert("Error loading employees: " + error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleSave = async (formData) => {
+  const filterEmployees = () => {
+    if (!searchQuery.trim()) {
+      setFilteredEmployees(employees);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    const filtered = employees.filter(
+      (emp) =>
+        emp.firstName?.toLowerCase().includes(query) ||
+        emp.lastName?.toLowerCase().includes(query) ||
+        emp.employeeCode?.toLowerCase().includes(query) ||
+        emp.email?.toLowerCase().includes(query) ||
+        emp.department?.toLowerCase().includes(query) ||
+        emp.designation?.toLowerCase().includes(query)
+    );
+    setFilteredEmployees(filtered);
+  };
+
+  const handleAddEmployee = async (employeeData) => {
     try {
-      if (editingEmployee) {
-        await apiCall(`/employees/${editingEmployee._id}`, { method: 'PUT', body: JSON.stringify(formData) })
-      } else {
-        await apiCall('/employees', { method: 'POST', body: JSON.stringify(formData) })
-      }
-      fetchEmployees()
-      setShowModal(false)
-      setEditingEmployee(null)
+      console.log("➕ Adding new employee:", employeeData);
+      const newEmployee = await apiCall("/employees", {
+        method: "POST",
+        body: JSON.stringify(employeeData),
+      });
+      console.log("✅ Employee added successfully:", newEmployee);
+      await fetchEmployees();
+      setShowModal(false);
+      alert("Employee added successfully!");
     } catch (error) {
-      alert(error.message)
+      console.error("❌ Error adding employee:", error);
+      throw error;
     }
-  }
+  };
 
-  const handleCreateUser = async (userData) => {
+  const handleEditEmployee = async (employeeData) => {
     try {
-      await apiCall('/auth/register', { method: 'POST', body: JSON.stringify(userData) })
-      alert(`Account created!\n\nEmail: ${userData.email}\nPassword: ${userData.password}`)
-      setShowUserModal(false)
-      setSelectedEmployee(null)
-      fetchEmployees()
+      console.log("✏️ Updating employee:", selectedEmployee._id, employeeData);
+      await apiCall(`/employees/${selectedEmployee._id}`, {
+        method: "PUT",
+        body: JSON.stringify(employeeData),
+      });
+      console.log("✅ Employee updated successfully");
+      await fetchEmployees();
+      setShowModal(false);
+      setSelectedEmployee(null);
+      alert("Employee updated successfully!");
     } catch (error) {
-      alert(error.message)
+      console.error("❌ Error updating employee:", error);
+      throw error;
     }
-  }
+  };
 
-  const handleResetPassword = async (resetData) => {
+  const handleDeleteEmployee = async (employeeId) => {
+    if (
+      !confirm(
+        "Are you sure you want to delete this employee? This action cannot be undone."
+      )
+    ) {
+      return;
+    }
+
     try {
-      await apiCall('/auth/reset-password', { method: 'POST', body: JSON.stringify(resetData) })
-      alert('Password reset successfully!')
-      setShowResetModal(false)
-      setSelectedEmployee(null)
+      console.log("🗑️ Deleting employee:", employeeId);
+      await apiCall(`/employees/${employeeId}`, {
+        method: "DELETE",
+      });
+      console.log("✅ Employee deleted successfully");
+      await fetchEmployees();
+      alert("Employee deleted successfully!");
     } catch (error) {
-      alert(error.message)
+      console.error("❌ Error deleting employee:", error);
+      alert("Error deleting employee: " + error.message);
     }
-  }
+  };
 
-  const filteredEmployees = employees.filter(emp =>
-    emp.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    emp.employeeCode.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  // ✅ Handle create user account
+  const handleCreateUser = (employee) => {
+    console.log("👤 Opening create user modal for:", employee);
+    setSelectedEmployee(employee);
+    setShowCreateUserModal(true);
+  };
 
-  if (loading) return <Loading />
+  // ✅ Handle reset password
+  const handleResetPassword = (employee) => {
+    console.log("🔑 Opening reset password modal for:", employee);
+    setSelectedEmployee(employee);
+    setShowResetPasswordModal(true);
+  };
+
+  const openEditModal = (employee) => {
+    setSelectedEmployee(employee);
+    setShowModal(true);
+  };
+
+  const openAddModal = () => {
+    setSelectedEmployee(null);
+    setShowModal(true);
+  };
+
+  const handleExport = () => {
+    // Export to CSV
+    const headers = [
+      "Employee Code",
+      "Name",
+      "Email",
+      "Department",
+      "Designation",
+      "Joining Date",
+      "Salary",
+      "Account Status",
+    ];
+    const rows = filteredEmployees.map((emp) => [
+      emp.employeeCode,
+      `${emp.firstName} ${emp.lastName}`,
+      emp.email,
+      emp.department,
+      emp.designation,
+      new Date(emp.dateOfJoining).toLocaleDateString(),
+      emp.grossSalary,
+      emp.user ? "Active" : "No Account",
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.join(","))
+      .join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `employees-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  if (loading) return <Loading />;
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Employees</h1>
-        <Button onClick={() => setShowModal(true)}>
-          <Plus className="w-5 h-5 mr-2 inline" />
-          Add Employee
-        </Button>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Employee Management
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Manage your organization&apos;s employees
+          </p>
+        </div>
+        {canManage && (
+          <div className="flex gap-3">
+            <Button onClick={handleExport} variant="outline">
+              <Download className="w-5 h-5 mr-2" />
+              Export
+            </Button>
+            <Button onClick={openAddModal}>
+              <UserPlus className="w-5 h-5 mr-2" />
+              Add Employee
+            </Button>
+          </div>
+        )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <SearchBar value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search employees..." />
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total Employees</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">
+                {employees.length}
+              </p>
+            </div>
+            <div className="bg-blue-500 p-3 rounded-full">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Active Accounts</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">
+                {employees.filter((e) => e.user).length}
+              </p>
+            </div>
+            <div className="bg-green-500 p-3 rounded-full">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Departments</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">
+                {new Set(employees.map((e) => e.department)).size}
+              </p>
+            </div>
+            <div className="bg-purple-500 p-3 rounded-full">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Avg. Salary</p>
+              <p className="text-3xl font-bold text-gray-900 mt-2">
+                ৳
+                {employees.length > 0
+                  ? Math.round(
+                      employees.reduce(
+                        (sum, e) => sum + (e.grossSalary || 0),
+                        0
+                      ) / employees.length
+                    ).toLocaleString()
+                  : 0}
+              </p>
+            </div>
+            <div className="bg-indigo-500 p-3 rounded-full">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
       </div>
 
+      {/* Search */}
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search by name, code, email, department, or designation..."
+        />
+      </div>
+
+      {/* Employees Table */}
       <EmployeeTable
         employees={filteredEmployees}
-        onEdit={(emp) => { setEditingEmployee(emp); setShowModal(true) }}
-        onCreateUser={(emp) => { setSelectedEmployee(emp); setShowUserModal(true) }}
-        onResetPassword={(emp) => { setSelectedEmployee(emp); setShowResetModal(true) }}
+        onEdit={canManage ? openEditModal : null}
+        onCreateUser={isAdmin ? handleCreateUser : null}
+        onResetPassword={isAdmin ? handleResetPassword : null}
+        onRefresh={fetchEmployees} // ✅ ADD THIS
       />
 
+      {/* Employee Modal */}
       {showModal && (
-        <EmployeeModal employee={editingEmployee} onClose={() => { setShowModal(false); setEditingEmployee(null) }} onSave={handleSave} />
+        <EmployeeModal
+          isOpen={showModal}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedEmployee(null);
+          }}
+          onSubmit={selectedEmployee ? handleEditEmployee : handleAddEmployee}
+          employee={selectedEmployee}
+        />
       )}
-      {showUserModal && selectedEmployee && (
-        <CreateUserModal employee={selectedEmployee} onClose={() => { setShowUserModal(false); setSelectedEmployee(null) }} onSubmit={handleCreateUser} />
+
+      {/* Create User Modal */}
+      {showCreateUserModal && (
+        <CreateUserModal
+          isOpen={showCreateUserModal}
+          onClose={() => {
+            setShowCreateUserModal(false);
+            setSelectedEmployee(null);
+          }}
+          employee={selectedEmployee}
+          onSuccess={fetchEmployees}
+        />
       )}
-      {showResetModal && selectedEmployee && (
-        <ResetPasswordModal employee={selectedEmployee} onClose={() => { setShowResetModal(false); setSelectedEmployee(null) }} onSubmit={handleResetPassword} />
+
+      {/* Reset Password Modal */}
+      {showResetPasswordModal && (
+        <ResetPasswordModal
+          isOpen={showResetPasswordModal}
+          onClose={() => {
+            setShowResetPasswordModal(false);
+            setSelectedEmployee(null);
+          }}
+          employee={selectedEmployee}
+          onSuccess={fetchEmployees}
+        />
       )}
     </div>
-  )
+  );
 }

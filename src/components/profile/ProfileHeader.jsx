@@ -1,6 +1,6 @@
 export default function ProfileHeader({ profile, employee }) {
     const roleColors = {
-      Admin: 'from-red-500 to-orange-500',
+      Admin: 'from-black to-gray-900',
       HR: 'from-blue-500 to-cyan-500',
       'Business Lead': 'from-purple-500 to-pink-500',
       'Team Lead': 'from-green-500 to-emerald-500',
