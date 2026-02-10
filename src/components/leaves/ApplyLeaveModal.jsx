@@ -271,7 +271,7 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>
@@ -280,7 +280,7 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
         {/* Info Message */}
         <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
             <div className="text-sm text-blue-700">
               <p className="font-medium mb-1">Leave Approval Process:</p>
               <p>

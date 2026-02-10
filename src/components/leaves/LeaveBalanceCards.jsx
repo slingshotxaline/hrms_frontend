@@ -17,7 +17,7 @@ export default function LeaveBalanceCards({ leaveBalance, employeeName }) {
             return (
               <div 
                 key={key} 
-                className={`bg-gradient-to-br ${color} rounded-xl shadow-lg p-6 text-white`}
+                className={`bg-linear-to-br ${color} rounded-xl shadow-lg p-6 text-white`}
               >
                 <h3 className="text-lg font-semibold mb-3">{label}</h3>
                 
