@@ -15,7 +15,7 @@ export default function RoleTable({ users, onRoleChange, onAssignManager, onRemo
     'HR': 'bg-blue-100 text-blue-800',
     'Business Lead': 'bg-purple-100 text-purple-800',
     'Team Lead': 'bg-green-100 text-green-800',
-    'Employee': 'bg-gray-100 text-gray-800',
+    'Employee': 'bg-gray-100 text-black',
   }
 
   const roles = ['Admin', 'HR', 'Business Lead', 'Team Lead', 'Employee']
@@ -25,13 +25,13 @@ export default function RoleTable({ users, onRoleChange, onAssignManager, onRemo
       <table className="w-full">
         <thead className="bg-gray-50 border-b border-gray-200">
           <tr>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">User</th>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Current Role</th>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Reports To</th>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Team Size</th>
+            <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">User</th>
+            <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Email</th>
+            <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Current Role</th>
+            <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Reports To</th>
+            <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Team Size</th>
             {isAdmin && (
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Actions</th>
             )}
           </tr>
         </thead>
@@ -47,14 +47,14 @@ export default function RoleTable({ users, onRoleChange, onAssignManager, onRemo
                       {user.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900">{user.name}</p>
+                      <p className="font-semibold text-black">{user.name}</p>
                       {user.employeeId && (
-                        <p className="text-xs text-gray-500">{user.employeeId.employeeCode}</p>
+                        <p className="text-xs text-black">{user.employeeId.employeeCode}</p>
                       )}
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-700">{user.email}</td>
+                <td className="px-6 py-4 text-sm text-black">{user.email}</td>
                 <td className="px-6 py-4">
                   {isAdmin ? (
                     <select
@@ -78,18 +78,18 @@ export default function RoleTable({ users, onRoleChange, onAssignManager, onRemo
                 <td className="px-6 py-4 text-sm">
                   {user.reportsTo ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-900">{user.reportsTo.name}</span>
-                      <span className="text-xs text-gray-500">({user.reportsTo.role})</span>
+                      <span className="text-black">{user.reportsTo.name}</span>
+                      <span className="text-xs text-black">({user.reportsTo.role})</span>
                     </div>
                   ) : (
-                    <span className="text-gray-400">-</span>
+                    <span className="text-black">-</span>
                   )}
                 </td>
                 <td className="px-6 py-4 text-sm">
                   <span className="font-semibold text-indigo-600">
                     {user.manages?.length || 0}
                   </span>
-                  <span className="text-gray-500 ml-1">members</span>
+                  <span className="text-black ml-1">members</span>
                 </td>
                 {isAdmin && (
                   <td className="px-6 py-4">

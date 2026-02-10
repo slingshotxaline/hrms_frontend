@@ -2,7 +2,7 @@ export default function Select({ label, options, error, ...props }) {
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-black mb-2">
             {label}
           </label>
         )}

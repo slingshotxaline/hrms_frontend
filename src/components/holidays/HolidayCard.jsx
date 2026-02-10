@@ -7,7 +7,7 @@ export default function HolidayCard({ holiday }) {
       Religious: 'bg-purple-100 text-purple-800',
       Company: 'bg-green-100 text-green-800',
     }
-    return colors[type] || 'bg-gray-100 text-gray-800'
+    return colors[type] || 'bg-gray-100 text-black'
   }
 
   const formatDate = (date) => {
@@ -23,8 +23,8 @@ export default function HolidayCard({ holiday }) {
     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-gray-900 mb-1">{holiday.name}</h3>
-          <p className="text-sm text-gray-600">{formatDate(holiday.date)}</p>
+          <h3 className="text-lg font-bold text-black mb-1">{holiday.name}</h3>
+          <p className="text-sm text-black">{formatDate(holiday.date)}</p>
         </div>
         <Calendar className="w-6 h-6 text-indigo-600 flex-shrink-0" />
       </div>
@@ -41,7 +41,7 @@ export default function HolidayCard({ holiday }) {
         )}
         
         {holiday.description && (
-          <p className="text-sm text-gray-600 mt-3 pt-3 border-t">{holiday.description}</p>
+          <p className="text-sm text-black mt-3 pt-3 border-t">{holiday.description}</p>
         )}
       </div>
     </div>

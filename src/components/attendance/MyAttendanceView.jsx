@@ -87,18 +87,18 @@ export default function MyAttendanceView() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">My Attendance</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-3xl font-bold text-black">My Attendance</h1>
+        <p className="text-black mt-2">
           {employee.firstName} {employee.lastName} • {employee.employeeCode}
         </p>
       </div>
 
       {/* Month/Year Selector */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Select Period</h3>
+        <h3 className="text-lg font-bold text-black mb-4">Select Period</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+            <label className="block text-sm font-medium text-black mb-2">Month</label>
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(Number(e.target.value))}
@@ -110,7 +110,7 @@ export default function MyAttendanceView() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+            <label className="block text-sm font-medium text-black mb-2">Year</label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
@@ -126,7 +126,7 @@ export default function MyAttendanceView() {
 
       {/* Statistics Cards */}
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <h2 className="text-xl font-bold text-black mb-4">
           {selectedMonthName} {selectedYear} Summary
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -166,28 +166,28 @@ export default function MyAttendanceView() {
       {/* Attendance Table */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-          <h3 className="font-semibold text-gray-900">
+          <h3 className="font-semibold text-black">
             Attendance Records ({monthFilteredAttendance.length})
           </h3>
         </div>
 
         {monthFilteredAttendance.length === 0 ? (
           <div className="text-center py-12">
-            <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">No attendance records for {selectedMonthName} {selectedYear}</p>
+            <Calendar className="w-16 h-16 text-black mx-auto mb-4" />
+            <p className="text-black">No attendance records for {selectedMonthName} {selectedYear}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Day</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">In Time</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Out Time</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Hours</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Late</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Date</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Day</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">In Time</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Out Time</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Hours</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Late</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -204,7 +204,7 @@ export default function MyAttendanceView() {
 
                     return (
                       <tr key={record._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                        <td className="px-6 py-4 text-sm font-medium text-black">
                           {date.toLocaleDateString('en-US', { 
                             month: 'short', 
                             day: 'numeric', 
@@ -213,24 +213,24 @@ export default function MyAttendanceView() {
                         </td>
                         <td className="px-6 py-4 text-sm">
                           <span className={`font-semibold ${
-                            dayName === 'Sat' || dayName === 'Sun' ? 'text-red-600' : 'text-gray-900'
+                            dayName === 'Sat' || dayName === 'Sun' ? 'text-red-600' : 'text-black'
                           }`}>
                             {dayName}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                        <td className="px-6 py-4 text-sm text-black">
                           {record.inTime ? new Date(record.inTime).toLocaleTimeString('en-US', { 
                             hour: '2-digit', 
                             minute: '2-digit' 
                           }) : '-'}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                        <td className="px-6 py-4 text-sm text-black">
                           {record.outTime ? new Date(record.outTime).toLocaleTimeString('en-US', { 
                             hour: '2-digit', 
                             minute: '2-digit' 
                           }) : '-'}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                        <td className="px-6 py-4 text-sm text-black">
                           {workingHours > 0 ? `${workingHours.toFixed(1)}h` : '-'}
                         </td>
                         <td className="px-6 py-4 text-sm">
@@ -262,8 +262,8 @@ function StatCard({ icon: Icon, label, value, color }) {
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-600 mb-1">{label}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm text-black mb-1">{label}</p>
+          <p className="text-2xl font-bold text-black">{value}</p>
         </div>
         <div className={`${color} p-3 rounded-full`}>
           <Icon className="w-6 h-6 text-white" />

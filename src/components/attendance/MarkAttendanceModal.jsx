@@ -11,7 +11,7 @@ export default function MarkAttendanceModal({ employees, myEmployee, canSeeAll, 
       <Modal isOpen={true} onClose={onClose} title="Mark Attendance" size="md">
         <div className="text-center py-8">
           <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-          <p className="text-gray-700">No employee record found. Contact HR to create your employee profile.</p>
+          <p className="text-black">No employee record found. Contact HR to create your employee profile.</p>
           <Button onClick={onClose} className="mt-4">Close</Button>
         </div>
       </Modal>
@@ -38,8 +38,8 @@ export default function MarkAttendanceModal({ employees, myEmployee, canSeeAll, 
         <div className="space-y-4">
           <div className="flex items-center justify-between p-6 border-2 border-gray-200 rounded-lg hover:border-indigo-300 transition-colors">
             <div>
-              <p className="font-semibold text-gray-900 text-lg">Clock In</p>
-              <p className="text-sm text-gray-600 mt-1">Mark your arrival time</p>
+              <p className="font-semibold text-black text-lg">Clock In</p>
+              <p className="text-sm text-black mt-1">Mark your arrival time</p>
             </div>
             <Button
               onClick={() => {
@@ -55,8 +55,8 @@ export default function MarkAttendanceModal({ employees, myEmployee, canSeeAll, 
 
           <div className="flex items-center justify-between p-6 border-2 border-gray-200 rounded-lg hover:border-indigo-300 transition-colors">
             <div>
-              <p className="font-semibold text-gray-900 text-lg">Clock Out</p>
-              <p className="text-sm text-gray-600 mt-1">Mark your departure time</p>
+              <p className="font-semibold text-black text-lg">Clock Out</p>
+              <p className="text-sm text-black mt-1">Mark your departure time</p>
             </div>
             <Button
               onClick={() => {
@@ -73,8 +73,8 @@ export default function MarkAttendanceModal({ employees, myEmployee, canSeeAll, 
 
         {/* Current Time Display */}
         <div className="bg-gray-50 rounded-lg p-4 text-center">
-          <p className="text-sm text-gray-600">Current Time</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">
+          <p className="text-sm text-black">Current Time</p>
+          <p className="text-2xl font-bold text-black mt-1">
             {new Date().toLocaleTimeString('en-US', { 
               hour: '2-digit', 
               minute: '2-digit',

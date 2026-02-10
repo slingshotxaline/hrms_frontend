@@ -88,7 +88,7 @@ export default function ProfileView() {
                 className={`py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
                     ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    : 'border-transparent text-black hover:text-black'
                 }`}
               >
                 {tab.label}

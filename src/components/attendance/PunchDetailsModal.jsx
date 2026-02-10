@@ -48,15 +48,15 @@ export default function PunchDetailsModal({ isOpen, record, onClose }) {
       size="lg"
     >
       {/* Employee Info */}
-      <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg">
+      <div className="mb-6 p-4 bg-linear-to-r from-indigo-50 to-blue-50 rounded-lg">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600">Employee Code</p>
-            <p className="text-lg font-bold text-gray-900">{record.employee?.employeeCode}</p>
+            <p className="text-sm text-black">Employee Code</p>
+            <p className="text-lg font-bold text-black">{record.employee?.employeeCode}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Date</p>
-            <p className="text-lg font-bold text-gray-900">
+            <p className="text-sm text-black">Date</p>
+            <p className="text-lg font-bold text-black">
               {new Date(record.date).toLocaleDateString('en-US', { 
                 weekday: 'short',
                 month: 'short', 
@@ -100,15 +100,15 @@ export default function PunchDetailsModal({ isOpen, record, onClose }) {
 
       {/* Punch Timeline */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
           <Clock className="w-5 h-5" />
           Punch Timeline ({sortedPunches.length} punches)
         </h3>
         
         {sortedPunches.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <Clock className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-500">No punches recorded</p>
+            <Clock className="w-12 h-12 text-black mx-auto mb-2" />
+            <p className="text-black">No punches recorded</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -158,7 +158,7 @@ export default function PunchDetailsModal({ isOpen, record, onClose }) {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-4 mt-2 text-sm text-black">
                     {punch.location && (
                       <div className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
@@ -182,7 +182,7 @@ export default function PunchDetailsModal({ isOpen, record, onClose }) {
       {/* Break Periods */}
       {breakPeriods.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
             <Coffee className="w-5 h-5" />
             Break Periods ({breakPeriods.length})
           </h3>
@@ -197,10 +197,10 @@ export default function PunchDetailsModal({ isOpen, record, onClose }) {
                     {index + 1}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-black">
                       {formatTime(breakPeriod.start)} - {formatTime(breakPeriod.end)}
                     </p>
-                    <p className="text-xs text-gray-600">Break duration</p>
+                    <p className="text-xs text-black">Break duration</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -220,28 +220,28 @@ export default function PunchDetailsModal({ isOpen, record, onClose }) {
       {/* Summary Section */}
       {sortedPunches.length > 0 && (
         <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <h4 className="font-semibold text-gray-900 mb-2">Summary</h4>
+          <h4 className="font-semibold text-black mb-2">Summary</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-gray-600">First Punch:</span>
-              <span className="ml-2 font-semibold text-gray-900">
+              <span className="text-black">First Punch:</span>
+              <span className="ml-2 font-semibold text-black">
                 {formatTime(sortedPunches[0].timestamp)} ({sortedPunches[0].type})
               </span>
             </div>
             <div>
-              <span className="text-gray-600">Last Punch:</span>
-              <span className="ml-2 font-semibold text-gray-900">
+              <span className="text-black">Last Punch:</span>
+              <span className="ml-2 font-semibold text-black">
                 {formatTime(sortedPunches[sortedPunches.length - 1].timestamp)} ({sortedPunches[sortedPunches.length - 1].type})
               </span>
             </div>
             <div>
-              <span className="text-gray-600">Total Punches:</span>
-              <span className="ml-2 font-semibold text-gray-900">
+              <span className="text-black">Total Punches:</span>
+              <span className="ml-2 font-semibold text-black">
                 {sortedPunches.length}
               </span>
             </div>
             <div>
-              <span className="text-gray-600">Net Productive Time:</span>
+              <span className="text-black">Net Productive Time:</span>
               <span className="ml-2 font-semibold text-green-600">
                 {netHours}h
               </span>

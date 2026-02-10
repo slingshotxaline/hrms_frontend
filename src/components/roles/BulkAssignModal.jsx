@@ -41,7 +41,7 @@ export default function BulkAssignModal({ employees, managers, onClose, onAssign
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Manager Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-black mb-2">
             Select Manager
           </label>
           <select
@@ -62,7 +62,7 @@ export default function BulkAssignModal({ employees, managers, onClose, onAssign
         {/* Employee Selection */}
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-black">
               Select Employees ({selectedEmployees.length} selected)
             </label>
             <button
@@ -90,13 +90,13 @@ export default function BulkAssignModal({ employees, managers, onClose, onAssign
                   className="w-4 h-4 text-indigo-600"
                 />
                 <div className="flex-1">
-                  <p className="font-semibold text-gray-900">{emp.name}</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="font-semibold text-black">{emp.name}</p>
+                  <p className="text-sm text-black">
                     {emp.email} • {emp.employeeId?.employeeCode || 'No Code'}
                   </p>
                 </div>
                 {emp.reportsTo && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-black">
                     Currently: {emp.reportsTo.name}
                   </span>
                 )}

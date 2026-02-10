@@ -160,8 +160,8 @@ export default function LeavesView() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Leave Management</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-black">Leave Management</h1>
+          <p className="text-black mt-1">
             {canViewAll
               ? "Manage all employee leave requests"
               : isLeader
@@ -206,8 +206,8 @@ export default function LeavesView() {
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
         <div className="flex items-center gap-4">
-          <Filter className="w-5 h-5 text-gray-600" />
-          <label className="text-sm font-medium text-gray-700">
+          <Filter className="w-5 h-5 text-black" />
+          <label className="text-sm font-medium text-black">
             Filter by Status:
           </label>
           <div className="flex gap-2">
@@ -216,7 +216,7 @@ export default function LeavesView() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filterStatus === "all"
                   ? "bg-indigo-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 text-black hover:bg-gray-200"
               }`}
             >
               All
@@ -226,7 +226,7 @@ export default function LeavesView() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filterStatus === "Pending"
                   ? "bg-yellow-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 text-black hover:bg-gray-200"
               }`}
             >
               Pending
@@ -236,7 +236,7 @@ export default function LeavesView() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filterStatus === "Approved"
                   ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 text-black hover:bg-gray-200"
               }`}
             >
               Approved
@@ -246,7 +246,7 @@ export default function LeavesView() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filterStatus === "Rejected"
                   ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-100 text-black hover:bg-gray-200"
               }`}
             >
               Rejected
@@ -320,8 +320,8 @@ function StatCard({ label, value, color, icon: Icon }) {
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-600 mb-1">{label}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm text-black mb-1">{label}</p>
+          <p className="text-3xl font-bold text-black">{value}</p>
         </div>
         <div className={`${color} p-3 rounded-full`}>
           <Icon className="w-6 h-6 text-white" />

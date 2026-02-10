@@ -25,14 +25,14 @@ export default function PayrollTable({ payrolls }) {
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Employee</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Code</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Basic Salary</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Allowances</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Deductions</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Net Salary</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Employee</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Code</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Basic Salary</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Allowances</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Deductions</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Net Salary</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Status</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -41,13 +41,13 @@ export default function PayrollTable({ payrolls }) {
               
               return (
                 <tr key={payroll._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 text-sm font-medium text-black">
                     {payroll.employee?.firstName} {payroll.employee?.lastName}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
+                  <td className="px-6 py-4 text-sm text-black">
                     {payroll.employee?.employeeCode}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
+                  <td className="px-6 py-4 text-sm text-black">
                     ${payroll.basicSalary?.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 text-sm text-green-600">

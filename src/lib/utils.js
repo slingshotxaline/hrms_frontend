@@ -50,13 +50,13 @@ export const getStatusColor = (status) => {
     Absent: 'bg-red-100 text-red-800',
     Leave: 'bg-blue-100 text-blue-800',
     Holiday: 'bg-purple-100 text-purple-800',
-    Weekend: 'bg-gray-100 text-gray-800',
+    Weekend: 'bg-gray-100 text-black',
     Pending: 'bg-yellow-100 text-yellow-800',
     Approved: 'bg-green-100 text-green-800',
     Rejected: 'bg-red-100 text-red-800',
-    Draft: 'bg-gray-100 text-gray-800',
+    Draft: 'bg-gray-100 text-black',
     Generated: 'bg-blue-100 text-blue-800',
     Paid: 'bg-green-100 text-green-800',
   }
-  return colors[status] || 'bg-gray-100 text-gray-800'
+  return colors[status] || 'bg-gray-100 text-black'
 }

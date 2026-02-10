@@ -7,11 +7,11 @@ export default function StatsCard({ title, value, icon: Icon, color, subtitle })
         </div>
       </div>
       
-      <h3 className="text-sm font-medium text-gray-600 mb-2">{title}</h3>
-      <p className="text-3xl font-bold text-gray-900 mb-2">{value}</p>
+      <h3 className="text-sm font-medium text-black mb-2">{title}</h3>
+      <p className="text-3xl font-bold text-black mb-2">{value}</p>
       
       {subtitle && (
-        <p className="text-xs text-gray-500">{subtitle}</p>
+        <p className="text-xs text-black">{subtitle}</p>
       )}
     </div>
   )

@@ -29,7 +29,7 @@ export default function QuickActionsModal({ isOpen, onClose, selectedDate, userR
       color: 'bg-blue-500',
       action: () => {
         onClose()
-        router.push('/dashboard/my-attendance')
+        router.push('/dashboard/attendance')
       },
       show: true
     },
@@ -110,7 +110,7 @@ export default function QuickActionsModal({ isOpen, onClose, selectedDate, userR
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-t-2xl p-6 text-white">
+          <div className="bg-gray-900 rounded-t-2xl p-6 text-white">
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-2xl font-bold">Quick Actions</h2>
@@ -140,7 +140,7 @@ export default function QuickActionsModal({ isOpen, onClose, selectedDate, userR
             <div className="mt-6 flex justify-end">
               <button
                 onClick={onClose}
-                className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors"
+                className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-lg font-semibold transition-colors"
               >
                 Close
               </button>
@@ -167,10 +167,10 @@ function QuickActionCard({ action }) {
 
       {/* Content */}
       <div className="text-left">
-        <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">
+        <h3 className="text-lg font-bold text-black mb-1 group-hover:text-indigo-600 transition-colors">
           {action.title}
         </h3>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-black">
           {action.description}
         </p>
       </div>

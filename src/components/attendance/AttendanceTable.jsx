@@ -40,7 +40,7 @@ export default function AttendanceTable({
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
             Early
           </span>
-          <span className="text-xs text-gray-500 mt-1">
+          <span className="text-xs text-black mt-1">
             {record.earlyMinutes} min early
           </span>
         </div>
@@ -72,7 +72,7 @@ export default function AttendanceTable({
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
             Half Day
           </span>
-          <span className="text-xs text-gray-500 mt-1">After 12:00 PM</span>
+          <span className="text-xs text-black mt-1">After 12:00 PM</span>
         </div>
       );
     }
@@ -83,7 +83,7 @@ export default function AttendanceTable({
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
             Late
           </span>
-          <span className="text-xs text-gray-500 mt-1">
+          <span className="text-xs text-black mt-1">
             {record.lateMinutes} min late
           </span>
         </div>
@@ -91,7 +91,7 @@ export default function AttendanceTable({
     }
 
     return (
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
+      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-black">
         -
       </span>
     );
@@ -101,7 +101,7 @@ export default function AttendanceTable({
   const getOvertimeBadge = (record) => {
     if (!record.outTime) {
       return (
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-black">
           Not punched out
         </span>
       );
@@ -179,66 +179,66 @@ export default function AttendanceTable({
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 {showEmployeeColumn && (
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                  <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                     Employee
                   </th>
                 )}
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   Date
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   Day
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   In Time
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   Out Time
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   <div className="flex flex-col">
                     <span>Total Hours</span>
-                    <span className="text-xs text-gray-400 font-normal">
+                    <span className="text-xs text-black font-normal">
                       Gross
                     </span>
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   <div className="flex flex-col">
                     <span>Working</span>
-                    <span className="text-xs text-gray-400 font-normal">
+                    <span className="text-xs text-black font-normal">
                       Net
                     </span>
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   <div className="flex flex-col">
                     <span>Breaks</span>
-                    <span className="text-xs text-gray-400 font-normal">
+                    <span className="text-xs text-black font-normal">
                       Total
                     </span>
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   Status
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   <div className="flex flex-col">
                     <span>In Timing</span>
-                    <span className="text-xs text-gray-400 font-normal">
+                    <span className="text-xs text-black font-normal">
                       Arrival
                     </span>
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   <div className="flex flex-col">
                     <span>Out Timing</span>
-                    <span className="text-xs text-gray-400 font-normal">
+                    <span className="text-xs text-black font-normal">
                       Departure
                     </span>
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   Actions
                 </th>
               </tr>
@@ -248,7 +248,7 @@ export default function AttendanceTable({
                 <tr>
                   <td
                     colSpan={showEmployeeColumn ? 12 : 11}
-                    className="px-6 py-12 text-center text-gray-500"
+                    className="px-4 py-12 text-center text-black"
                   >
                     No attendance records found for this period
                   </td>
@@ -285,19 +285,19 @@ export default function AttendanceTable({
                         }`}
                       >
                         {showEmployeeColumn && (
-                          <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          <td className="px-4 py-4 text-xs font-medium text-black">
                             <div>
                               <p>
                                 {record.employee?.firstName}{" "}
                                 {record.employee?.lastName}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-black">
                                 {record.employee?.employeeCode}
                               </p>
                             </div>
                           </td>
                         )}
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                        <td className="px-4 py-4 text-xs text-black">
                           <div className="flex items-center gap-2">
                             {date.toLocaleDateString("en-US", {
                               month: "short",
@@ -311,7 +311,7 @@ export default function AttendanceTable({
                             )}
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                        {/* <td className="px-4 py-4 text-xs text-black">
                           <div className="flex items-center gap-2">
                             {date.toLocaleDateString("en-US", {
                               month: "short",
@@ -324,17 +324,17 @@ export default function AttendanceTable({
                               </span>
                             )}
                           </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm">
+                        </td> */}
+                        <td className="px-4 py-4 text-xs">
                           <span
                             className={`font-semibold ${
-                              isWeekendDay ? "text-red-600" : "text-gray-900"
+                              isWeekendDay ? "text-red-600" : "text-black"
                             }`}
                           >
                             {dayName}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                        <td className="px-4 py-4 text-xs text-black">
                           {record.inTime ? (
                             <div className="flex flex-col">
                               <span className="font-semibold">
@@ -350,7 +350,7 @@ export default function AttendanceTable({
                             "-"
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                        <td className="px-4 py-4 text-xs text-black">
                           {record.outTime ? (
                             <div className="flex flex-col">
                               <span className="font-semibold">
@@ -366,7 +366,7 @@ export default function AttendanceTable({
                             "-"
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-4 py-4 text-xs">
                           {grossHours > 0 ? (
                             <span
                               className={`font-semibold ${
@@ -376,10 +376,10 @@ export default function AttendanceTable({
                               {grossHours.toFixed(1)}h
                             </span>
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <span className="text-black">-</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-4 py-4 text-xs">
                           {netHours > 0 ? (
                             <span
                               className={`font-semibold ${
@@ -389,10 +389,10 @@ export default function AttendanceTable({
                               {netHours.toFixed(1)}h
                             </span>
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <span className="text-black">-</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-4 py-4 text-xs">
                           {breakHours > 0 ? (
                             <div className="flex items-center gap-1">
                               <Coffee className="w-3 h-3 text-amber-600" />
@@ -401,19 +401,19 @@ export default function AttendanceTable({
                               </span>
                             </div>
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <span className="text-black">-</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-4 py-4 text-xs">
                           <Badge status={record.status} />
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-4 py-4 text-xs">
                           {getTimingBadge(record)}
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-4 py-4 text-xs">
                           {getOvertimeBadge(record)}
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-4 py-4 text-xs">
                           <button
                             onClick={() => handleViewPunches(record)}
                             className="flex items-center gap-1 px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors"

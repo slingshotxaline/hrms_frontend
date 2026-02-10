@@ -33,13 +33,13 @@ export default function EmployeeTable({ employees, onEdit, onCreateUser, onReset
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Code</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Department</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Designation</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Salary</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Code</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Name</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Department</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Designation</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Salary</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Status</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -50,16 +50,16 @@ export default function EmployeeTable({ employees, onEdit, onCreateUser, onReset
                   !employee.isActive ? 'bg-gray-100 opacity-60' : ''
                 }`}
               >
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{employee.employeeCode}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm font-medium text-black">{employee.employeeCode}</td>
+                <td className="px-6 py-4 text-sm text-black">
                   {employee.firstName} {employee.lastName}
                   {!employee.isActive && (
                     <span className="ml-2 text-xs text-red-600">(Inactive)</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-700">{employee.department}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">{employee.designation}</td>
-                <td className="px-6 py-4 text-sm text-gray-700">৳{employee.basicSalary?.toLocaleString()}</td>
+                <td className="px-6 py-4 text-sm text-black">{employee.department}</td>
+                <td className="px-6 py-4 text-sm text-black">{employee.designation}</td>
+                <td className="px-6 py-4 text-sm text-black">৳{employee.basicSalary?.toLocaleString()}</td>
                 <td className="px-6 py-4 text-sm">
                   <div className="flex flex-col gap-1">
                     {/* Account Status */}

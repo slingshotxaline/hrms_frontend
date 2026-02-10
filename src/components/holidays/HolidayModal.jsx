@@ -64,13 +64,13 @@ export default function HolidayModal({ onClose, onSubmit }) {
             checked={formData.isPaid}
             onChange={(e) => setFormData({ ...formData, isPaid: e.target.checked })}
           />
-          <label htmlFor="isPaid" className="text-sm font-medium text-gray-700">
+          <label htmlFor="isPaid" className="text-sm font-medium text-black">
             Paid Holiday
           </label>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-black mb-2">
             Description (Optional)
           </label>
           <textarea

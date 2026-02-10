@@ -49,7 +49,7 @@ export default function HolidaysView() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Holidays</h1>
+        <h1 className="text-3xl font-bold text-black">Holidays</h1>
         {(user.role === 'Admin' || user.role === 'HR') && (
           <Button onClick={() => setShowAddModal(true)}>
             <Plus className="w-5 h-5 mr-2 inline" />
@@ -60,9 +60,9 @@ export default function HolidaysView() {
 
       {holidays.length === 0 ? (
         <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-          <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Holidays Added</h3>
-          <p className="text-gray-600 mb-6">Start by adding your first holiday</p>
+          <Calendar className="w-16 h-16 text-black mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-black mb-2">No Holidays Added</h3>
+          <p className="text-black mb-6">Start by adding your first holiday</p>
           {(user.role === 'Admin' || user.role === 'HR') && (
             <Button onClick={() => setShowAddModal(true)}>
               <Plus className="w-5 h-5 mr-2 inline" />

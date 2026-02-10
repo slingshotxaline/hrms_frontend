@@ -1,135 +1,148 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Modal from '@/components/common/Modal'
-import Button from '@/components/common/Button'
-import { apiCall } from '@/lib/api'
-import { Calendar, AlertCircle } from 'lucide-react'
+import { useState } from "react";
+import Modal from "@/components/common/Modal";
+import Button from "@/components/common/Button";
+import { apiCall } from "@/lib/api";
+import { Calendar, AlertCircle } from "lucide-react";
 
 export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
-    leaveType: 'Casual Leave',
-    startDate: '',
-    endDate: '',
-    reason: '',
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+    leaveType: "Casual Leave",
+    startDate: "",
+    endDate: "",
+    reason: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const leaveTypes = [
-    { value: 'Casual Leave', label: 'Casual Leave', balance: myEmployee?.leaveBalance?.casual ?? 12 },
-    { value: 'Sick Leave', label: 'Sick Leave', balance: myEmployee?.leaveBalance?.sick ?? 12 },
-    { value: 'Earned Leave', label: 'Earned Leave', balance: myEmployee?.leaveBalance?.earned ?? 15 },
-    { value: 'Unpaid Leave', label: 'Unpaid Leave', balance: '∞' },
-  ]
+    {
+      value: "Casual Leave",
+      label: "Casual Leave",
+      balance: myEmployee?.leaveBalance?.casual ?? 12,
+    },
+    {
+      value: "Sick Leave",
+      label: "Sick Leave",
+      balance: myEmployee?.leaveBalance?.sick ?? 12,
+    },
+    {
+      value: "Earned Leave",
+      label: "Earned Leave",
+      balance: myEmployee?.leaveBalance?.earned ?? 15,
+    },
+    { value: "Unpaid Leave", label: "Unpaid Leave", balance: "∞" },
+  ];
 
   const calculateDays = () => {
-    if (!formData.startDate || !formData.endDate) return 0
-    
-    const start = new Date(formData.startDate)
-    const end = new Date(formData.endDate)
-    const diffTime = end - start
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
-    
-    return diffDays > 0 ? diffDays : 0
-  }
+    if (!formData.startDate || !formData.endDate) return 0;
 
-  const totalDays = calculateDays()
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+    const diffTime = end - start;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-  const selectedLeaveType = leaveTypes.find(lt => lt.value === formData.leaveType)
-  const hasInsufficientBalance = 
-    formData.leaveType !== 'Unpaid Leave' && 
-    totalDays > 0 && 
-    selectedLeaveType?.balance < totalDays
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const totalDays = calculateDays();
+
+  const selectedLeaveType = leaveTypes.find(
+    (lt) => lt.value === formData.leaveType
+  );
+  const hasInsufficientBalance =
+    formData.leaveType !== "Unpaid Leave" &&
+    totalDays > 0 &&
+    selectedLeaveType?.balance < totalDays;
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
     // Validation
     if (!formData.startDate || !formData.endDate) {
-      setError('Please select both start and end dates')
-      return
+      setError("Please select both start and end dates");
+      return;
     }
 
     if (!formData.reason.trim()) {
-      setError('Please provide a reason for leave')
-      return
+      setError("Please provide a reason for leave");
+      return;
     }
 
     if (formData.reason.trim().length < 10) {
-      setError('Reason must be at least 10 characters')
-      return
+      setError("Reason must be at least 10 characters");
+      return;
     }
 
     if (totalDays <= 0) {
-      setError('End date must be after or equal to start date')
-      return
+      setError("End date must be after or equal to start date");
+      return;
     }
 
     if (hasInsufficientBalance) {
-      setError(`Insufficient leave balance. Available: ${selectedLeaveType?.balance} days, Requested: ${totalDays} days`)
-      return
+      setError(
+        `Insufficient leave balance. Available: ${selectedLeaveType?.balance} days, Requested: ${totalDays} days`
+      );
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
-      await apiCall('/leaves', {
-        method: 'POST',
+      await apiCall("/leaves", {
+        method: "POST",
         body: JSON.stringify({
           ...formData,
           totalDays,
         }),
-      })
+      });
 
-      alert('Leave application submitted successfully!')
-      onSubmit()
-      onClose()
+      alert("Leave application submitted successfully!");
+      onSubmit();
+      onClose();
     } catch (error) {
-      console.error('Error applying leave:', error)
-      setError(error.message || 'Failed to submit leave application')
+      console.error("Error applying leave:", error);
+      setError(error.message || "Failed to submit leave application");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-    setError('')
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setError("");
+  };
 
   // Get today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date().toISOString().split("T")[0];
 
   return (
-    <Modal 
-      isOpen={true} 
-      onClose={onClose} 
-      title="Apply for Leave"
-      size="lg"
-    >
+    <Modal isOpen={true} onClose={onClose} title="Apply for Leave" size="lg">
       <form onSubmit={handleSubmit}>
         {/* Leave Balance Info */}
         <div className="mb-6 p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
-          <h4 className="text-sm font-semibold text-indigo-900 mb-3">Your Leave Balance</h4>
+          <h4 className="text-sm font-semibold text-black mb-3">
+            Your Leave Balance
+          </h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {leaveTypes.map((type) => (
-              <div 
+              <div
                 key={type.value}
                 className={`p-3 bg-white rounded-lg border-2 transition-all ${
                   formData.leaveType === type.value
-                    ? 'border-indigo-500 shadow-md'
-                    : 'border-gray-200'
+                    ? "border-indigo-500 shadow-md"
+                    : "border-gray-200"
                 }`}
               >
-                <p className="text-xs text-gray-600 mb-1">{type.label}</p>
+                <p className="text-xs text-black mb-1">{type.label}</p>
                 <p className="text-2xl font-bold text-indigo-600">
-                  {type.balance === '∞' ? '∞' : type.balance}
+                  {type.balance === "∞" ? "∞" : type.balance}
                 </p>
-                <p className="text-xs text-gray-500">
-                  {type.balance === '∞' ? 'Unlimited' : 'days left'}
+                <p className="text-xs text-black">
+                  {type.balance === "∞" ? "Unlimited" : "days left"}
                 </p>
               </div>
             ))}
@@ -139,19 +152,23 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
         <div className="space-y-4 mb-6">
           {/* Leave Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-black mb-2">
               Leave Type <span className="text-red-500">*</span>
             </label>
             <select
               name="leaveType"
               value={formData.leaveType}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
               required
             >
               {leaveTypes.map((type) => (
                 <option key={type.value} value={type.value}>
-                  {type.label} ({type.balance === '∞' ? 'Unlimited' : `${type.balance} days available`})
+                  {type.label} (
+                  {type.balance === "∞"
+                    ? "Unlimited"
+                    : `${type.balance} days available`}
+                  )
                 </option>
               ))}
             </select>
@@ -160,7 +177,7 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
           {/* Date Range */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-black mb-2">
                 Start Date <span className="text-red-500">*</span>
               </label>
               <input
@@ -169,13 +186,13 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
                 value={formData.startDate}
                 onChange={handleChange}
                 min={today}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-black mb-2">
                 End Date <span className="text-red-500">*</span>
               </label>
               <input
@@ -184,7 +201,7 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
                 value={formData.endDate}
                 onChange={handleChange}
                 min={formData.startDate || today}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
                 required
               />
             </div>
@@ -192,30 +209,39 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
 
           {/* Total Days Calculation */}
           {totalDays > 0 && (
-            <div className={`p-4 rounded-lg border-2 ${
-              hasInsufficientBalance 
-                ? 'bg-red-50 border-red-300' 
-                : 'bg-green-50 border-green-300'
-            }`}>
+            <div
+              className={`p-4 rounded-lg border-2 ${
+                hasInsufficientBalance
+                  ? "bg-red-50 border-red-300"
+                  : "bg-green-50 border-green-300"
+              }`}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Calendar className={`w-5 h-5 ${
-                    hasInsufficientBalance ? 'text-red-600' : 'text-green-600'
-                  }`} />
-                  <span className="text-sm font-medium text-gray-700">
+                  <Calendar
+                    className={`w-5 h-5 ${
+                      hasInsufficientBalance ? "text-red-600" : "text-green-600"
+                    }`}
+                  />
+                  <span className="text-sm font-medium text-black">
                     Total Leave Duration:
                   </span>
                 </div>
-                <span className={`text-2xl font-bold ${
-                  hasInsufficientBalance ? 'text-red-600' : 'text-green-600'
-                }`}>
-                  {totalDays} {totalDays === 1 ? 'day' : 'days'}
+                <span
+                  className={`text-2xl font-bold ${
+                    hasInsufficientBalance ? "text-red-600" : "text-green-600"
+                  }`}
+                >
+                  {totalDays} {totalDays === 1 ? "day" : "days"}
                 </span>
               </div>
               {hasInsufficientBalance && (
                 <p className="text-sm text-red-600 mt-2 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
-                  Insufficient balance! Available: {selectedLeaveType?.balance} days
+                  Insufficient balance! Available: {
+                    selectedLeaveType?.balance
+                  }{" "}
+                  days
                 </p>
               )}
             </div>
@@ -223,7 +249,7 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
 
           {/* Reason */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-black mb-2">
               Reason for Leave <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -232,10 +258,10 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
               onChange={handleChange}
               placeholder="Please provide a brief reason for your leave request..."
               rows={4}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none text-black"
               required
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-black mt-1">
               {formData.reason.length}/500 characters
             </p>
           </div>
@@ -257,7 +283,11 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
             <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-blue-700">
               <p className="font-medium mb-1">Leave Approval Process:</p>
-              <p>Your leave request will be sent to your reporting manager, HR, and Admin for approval. You will be notified once your leave is approved or rejected.</p>
+              <p>
+                Your leave request will be sent to your reporting manager, HR,
+                and Admin for approval. You will be notified once your leave is
+                approved or rejected.
+              </p>
             </div>
           </div>
         </div>
@@ -275,7 +305,7 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
           <Button
             type="submit"
             disabled={loading || hasInsufficientBalance}
-            className="bg-indigo-600 hover:bg-indigo-700"
+            className="bg-black hover:bg-gray-700"
           >
             {loading ? (
               <>
@@ -284,13 +314,15 @@ export default function ApplyLeaveModal({ myEmployee, onClose, onSubmit }) {
               </>
             ) : (
               <>
-                <Calendar className="w-4 h-4 mr-2" />
-                Submit Leave Application
+                <div className="flex items-center">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Submit Leave Application
+                </div>
               </>
             )}
           </Button>
         </div>
       </form>
     </Modal>
-  )
+  );
 }

@@ -19,7 +19,7 @@ export default function PersonalInfoTab({ profile, onUpdate }) {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-bold text-gray-900">Personal Information</h3>
+        <h3 className="text-lg font-bold text-black">Personal Information</h3>
         {!isEditing && (
           <Button variant="outline" onClick={() => setIsEditing(true)}>
             <Edit className="w-4 h-4 mr-2 inline" />
@@ -86,9 +86,9 @@ function InfoCard({ icon: Icon, label, value, badge }) {
         <Icon className="w-5 h-5 text-indigo-600" />
       </div>
       <div className="flex-1">
-        <p className="text-sm text-gray-500">{label}</p>
+        <p className="text-sm text-black">{label}</p>
         <div className="flex items-center gap-2 mt-0.5">
-          <p className="font-semibold text-gray-900">{value}</p>
+          <p className="font-semibold text-black">{value}</p>
           {badge && (
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeColors[badge] || ''}`}>
               {badge}

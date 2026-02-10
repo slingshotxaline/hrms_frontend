@@ -13,7 +13,7 @@ export default function PayrollFilters({ selectedMonth, selectedYear, setSelecte
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
         <Select
           label="Month"
           options={monthOptions}

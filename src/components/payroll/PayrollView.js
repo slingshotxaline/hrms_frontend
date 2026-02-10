@@ -6,7 +6,7 @@ import PayrollTable from './PayrollTable'
 import PayrollFilters from './PayrollFilters'
 import Button from '@/components/common/Button'
 import Loading from '@/components/common/Loading'
-import { DollarSign } from 'lucide-react'
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
 export default function PayrollView() {
   const [payrolls, setPayrolls] = useState([])
@@ -65,9 +65,9 @@ export default function PayrollView() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Payroll Management</h1>
+        <h1 className="text-3xl font-bold text-black">Payroll Management</h1>
         <Button onClick={generatePayroll}>
-          <DollarSign className="w-5 h-5 mr-2 inline" />
+          <FaBangladeshiTakaSign className="w-5 h-5 mr-2 inline" />
           Generate Payroll
         </Button>
       </div>
@@ -83,9 +83,9 @@ export default function PayrollView() {
 
       {payrolls.length === 0 && (
         <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-          <DollarSign className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Payroll Records</h3>
-          <p className="text-gray-600 mb-6">
+          <FaBangladeshiTakaSign className="w-16 h-16 text-black mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-black mb-2">No Payroll Records</h3>
+          <p className="text-black mb-6">
             No payroll has been generated for {getMonthName(selectedMonth)} {selectedYear}
           </p>
           <Button onClick={generatePayroll}>

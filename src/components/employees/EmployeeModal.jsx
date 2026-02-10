@@ -157,7 +157,7 @@ export default function EmployeeModal({ isOpen, onClose, onSubmit, employee }) {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Information */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
             <User className="w-5 h-5 text-indigo-600" />
             Personal Information
           </h3>
@@ -230,7 +230,7 @@ export default function EmployeeModal({ isOpen, onClose, onSubmit, employee }) {
 
         {/* Employment Details */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
             <Briefcase className="w-5 h-5 text-indigo-600" />
             Employment Details
           </h3>
@@ -276,7 +276,7 @@ export default function EmployeeModal({ isOpen, onClose, onSubmit, employee }) {
 
         {/* Salary Information */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
             <DollarSign className="w-5 h-5 text-indigo-600" />
             Salary Information
           </h3>
@@ -318,7 +318,7 @@ export default function EmployeeModal({ isOpen, onClose, onSubmit, employee }) {
           </div>
           <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-black">
                 Gross Salary:
               </span>
               <span className="text-2xl font-bold text-green-600">
@@ -330,7 +330,7 @@ export default function EmployeeModal({ isOpen, onClose, onSubmit, employee }) {
 
         {/* Shift Timing */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
             <Clock className="w-5 h-5 text-indigo-600" />
             Shift Timing
           </h3>
@@ -356,7 +356,7 @@ export default function EmployeeModal({ isOpen, onClose, onSubmit, employee }) {
 
         {/* Emergency Contact */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
             <Users className="w-5 h-5 text-indigo-600" />
             Emergency Contact
           </h3>

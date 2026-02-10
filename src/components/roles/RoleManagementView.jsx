@@ -187,8 +187,8 @@ export default function RoleManagementView() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Role Management</h1>
-          <p className="text-gray-600 mt-1">Manage roles and organizational hierarchy</p>
+          <h1 className="text-3xl font-bold text-black">Role Management</h1>
+          <p className="text-black mt-1">Manage roles and organizational hierarchy</p>
         </div>
         {(isAdmin || isHR) && users.length > 0 && (
           <Button className='bg-black' onClick={() => setShowBulkAssignModal(true)}>
@@ -253,7 +253,7 @@ export default function RoleManagementView() {
                   className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
                     activeTab === tab.id
                       ? 'border-indigo-500 text-indigo-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      : 'border-transparent text-black hover:text-black'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
@@ -321,8 +321,8 @@ function StatsCard({ icon: Icon, label, value, color }) {
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-600 mb-1">{label}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm text-black mb-1">{label}</p>
+          <p className="text-3xl font-bold text-black">{value}</p>
         </div>
         <div className={`${color} p-3 rounded-full`}>
           <Icon className="w-6 h-6 text-white" />
@@ -336,8 +336,8 @@ function MyTeamView({ team }) {
   if (team.length === 0) {
     return (
       <div className="text-center py-12">
-        <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-600">No team members assigned yet</p>
+        <Users className="w-16 h-16 text-black mx-auto mb-4" />
+        <p className="text-black">No team members assigned yet</p>
       </div>
     )
   }
@@ -351,22 +351,22 @@ function MyTeamView({ team }) {
               {member.name.charAt(0)}
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">{member.name}</h3>
-              <p className="text-sm text-gray-600">{member.email}</p>
+              <h3 className="font-semibold text-black">{member.name}</h3>
+              <p className="text-sm text-black">{member.email}</p>
             </div>
           </div>
           {member.employeeId && (
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Code:</span>
+                <span className="text-black">Code:</span>
                 <span className="font-semibold">{member.employeeId.employeeCode}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Department:</span>
+                <span className="text-black">Department:</span>
                 <span className="font-semibold">{member.employeeId.department}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Designation:</span>
+                <span className="text-black">Designation:</span>
                 <span className="font-semibold">{member.employeeId.designation}</span>
               </div>
             </div>

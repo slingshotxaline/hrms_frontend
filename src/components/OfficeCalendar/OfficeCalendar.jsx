@@ -139,12 +139,12 @@ export default function OfficeCalendar({ userRole }) {
         onClick={() => handleDayClick(day)} // ✅ ADD THIS
         className={`h-20 p-2 rounded-lg border-2 transition-all hover:shadow-lg hover:scale-105 ${
           today
-            ? "bg-indigo-600 text-white border-indigo-600 font-bold shadow-lg"
+            ? "bg-black text-white border-indigo-600 font-bold shadow-lg"
             : holiday
             ? "bg-purple-100 border-purple-300 text-purple-900 hover:bg-purple-200"
             : weekend
             ? "bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
-            : "bg-white border-gray-200 hover:border-indigo-300 hover:bg-indigo-50"
+            : "bg-white border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 text-black"
         }`}
       >
         <div className="flex flex-col h-full">
@@ -177,7 +177,7 @@ export default function OfficeCalendar({ userRole }) {
     <>
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             Office Calendar
           </h2>
@@ -188,7 +188,7 @@ export default function OfficeCalendar({ userRole }) {
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-lg font-semibold text-gray-900 min-w-[180px] text-center">
+            <span className="text-lg font-semibold text-black min-w-[180px] text-center">
               {monthName} {year}
             </span>
             <button
@@ -205,7 +205,7 @@ export default function OfficeCalendar({ userRole }) {
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div
               key={day}
-              className="text-center text-sm font-semibold text-gray-600 py-2"
+              className="text-center text-sm font-semibold text-black py-2"
             >
               {day}
             </div>
@@ -213,21 +213,21 @@ export default function OfficeCalendar({ userRole }) {
         </div>
 
         {/* Calendar days */}
-        <div className="grid grid-cols-7 gap-2">{days}</div>
+        <div className="grid grid-cols-7 gap-2 ">{days}</div>
 
         {/* Legend */}
-        <div className="mt-6 flex flex-wrap gap-4 text-sm">
+        <div className="mt-6 flex flex-wrap gap-4 text-sm text-black ">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-indigo-600 rounded"></div>
-            <span className="text-gray-600">Today</span>
+            <div className="w-4 h-4 bg-black rounded"></div>
+            <span className="text-black">Today</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-red-50 border-2 border-red-200 rounded"></div>
-            <span className="text-gray-600">Weekend</span>
+            <span className="text-black">Weekend</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-purple-100 border-2 border-purple-300 rounded"></div>
-            <span className="text-gray-600">Holiday</span>
+            <span className="text-black">Holiday</span>
           </div>
         </div>
 

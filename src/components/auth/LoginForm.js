@@ -45,8 +45,8 @@ export default function LoginForm() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4">
               <Users className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">HRMS System</h2>
-            <p className="text-gray-600 mt-2">Welcome back! Please login to continue</p>
+            <h2 className="text-3xl font-bold text-black">HRMS System</h2>
+            <p className="text-black mt-2">Welcome back! Please login to continue</p>
           </div>
 
           {error && (
@@ -90,7 +90,7 @@ export default function LoginForm() {
                 <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">For Administrators</span>
+                <span className="px-2 bg-white text-black">For Administrators</span>
               </div>
             </div>
 
@@ -103,7 +103,7 @@ export default function LoginForm() {
             </button>
           </div>
 
-          <div className="text-center text-sm text-gray-600 pt-4 border-t">
+          <div className="text-center text-sm text-black pt-4 border-t">
             <p className="font-medium">Regular Employee?</p>
             <p className="mt-1">Contact your HR department to get your login credentials.</p>
           </div>

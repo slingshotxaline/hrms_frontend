@@ -180,7 +180,7 @@ export default function DashboardView() {
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-8 text-white">
+      <div className="bg-black rounded-xl shadow-lg p-8 text-white">
         <h1 className="text-3xl font-bold mb-2">
           Welcome back, {user?.name}! 👋
         </h1>
@@ -213,31 +213,31 @@ export default function DashboardView() {
 
       {/* Today's Summary */}
       <div className="bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Today&apos;s Summary</h2>
+        <h2 className="text-xl font-bold text-black mb-4">Today&apos;s Summary</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Attendance Summary */}
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-200">
-            <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+            <h3 className="font-semibold text-black mb-2 flex items-center gap-2">
               <Clock className="w-5 h-5 text-green-600" />
               Attendance
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Total Employees:</span>
-                <span className="font-bold text-gray-900">{stats.totalEmployees}</span>
+                <span className="text-black">Total Employees:</span>
+                <span className="font-bold text-black">{stats.totalEmployees}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Present:</span>
+                <span className="text-black">Present:</span>
                 <span className="font-bold text-green-600">{stats.presentToday}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Absent:</span>
+                <span className="text-black">Absent:</span>
                 <span className="font-bold text-red-600">
                   {stats.totalEmployees - stats.presentToday - stats.onLeave}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Attendance Rate:</span>
+                <span className="text-black">Attendance Rate:</span>
                 <span className="font-bold text-indigo-600">{attendancePercentage}%</span>
               </div>
             </div>
@@ -245,23 +245,23 @@ export default function DashboardView() {
 
           {/* Leave Summary */}
           <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg p-4 border-2 border-yellow-200">
-            <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+            <h3 className="font-semibold text-black mb-2 flex items-center gap-2">
               <Calendar className="w-5 h-5 text-yellow-600" />
               Leaves
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">On Leave Today:</span>
+                <span className="text-black">On Leave Today:</span>
                 <span className="font-bold text-yellow-600">{stats.onLeave}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Available:</span>
+                <span className="text-black">Available:</span>
                 <span className="font-bold text-green-600">
                   {stats.totalEmployees - stats.onLeave}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Availability:</span>
+                <span className="text-black">Availability:</span>
                 <span className="font-bold text-indigo-600">
                   {stats.totalEmployees > 0 
                     ? (((stats.totalEmployees - stats.onLeave) / stats.totalEmployees) * 100).toFixed(1)
@@ -273,23 +273,23 @@ export default function DashboardView() {
 
           {/* Punctuality Summary */}
           <div className="bg-gradient-to-br from-red-50 to-rose-50 rounded-lg p-4 border-2 border-red-200">
-            <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+            <h3 className="font-semibold text-black mb-2 flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-red-600" />
               Punctuality
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Late Today:</span>
+                <span className="text-black">Late Today:</span>
                 <span className="font-bold text-red-600">{stats.lateToday}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">On Time:</span>
+                <span className="text-black">On Time:</span>
                 <span className="font-bold text-green-600">
                   {stats.presentToday - stats.lateToday}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Punctuality Rate:</span>
+                <span className="text-black">Punctuality Rate:</span>
                 <span className="font-bold text-indigo-600">
                   {stats.presentToday > 0
                     ? (((stats.presentToday - stats.lateToday) / stats.presentToday) * 100).toFixed(1)

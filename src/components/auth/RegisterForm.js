@@ -125,10 +125,10 @@ export default function RegisterForm() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full mb-4">
               <Shield className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-3xl font-bold text-black">
               {step === 1 ? 'Admin Registration' : 'Employee Profile'}
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="text-black mt-2">
               {step === 1 ? 'Step 1: Create your account' : 'Step 2: Complete your employee profile'}
             </p>
           </div>
@@ -215,7 +215,7 @@ export default function RegisterForm() {
                   value={formData.secretKey}
                   onChange={(e) => setFormData({ ...formData, secretKey: e.target.value })}
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-black mt-1">
                   Contact system administrator for the secret key
                 </p>
               </div>
@@ -333,7 +333,7 @@ export default function RegisterForm() {
 
           <div className="text-center text-sm space-y-2">
             <div className="pt-4 border-t border-gray-200">
-              <p className="text-gray-600">Already have an account?</p>
+              <p className="text-black">Already have an account?</p>
               <button
                 onClick={() => router.push('/login')}
                 className="text-indigo-600 hover:text-indigo-800 font-medium mt-1"
@@ -346,11 +346,11 @@ export default function RegisterForm() {
 
         {/* Info Card */}
         <div className="mt-6 bg-white rounded-xl shadow-lg p-6">
-          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          <h3 className="font-semibold text-black mb-3 flex items-center gap-2">
             <Users className="w-5 h-5 text-indigo-600" />
             Employee Registration
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-black">
             Regular employees cannot register directly. Admin or HR must create employee accounts 
             from the Employee Management section and provide login credentials.
           </p>

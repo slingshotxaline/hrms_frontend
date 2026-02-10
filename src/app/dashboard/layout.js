@@ -51,19 +51,19 @@ export default function Layout({ children }) {
 //           <h1 className="text-2xl font-bold text-blue-600">HRMS</h1>
 //         </div>
 //         <nav className="p-4 space-y-2">
-//           <Link href="/dashboard" className="flex items-center space-x-3 p-3 text-gray-700 hover:bg-blue-50 rounded-lg">
+//           <Link href="/dashboard" className="flex items-center space-x-3 p-3 text-black hover:bg-blue-50 rounded-lg">
 //             <LayoutDashboard size={20} />
 //             <span>Dashboard</span>
 //           </Link>
-//           <Link href="/dashboard/employees" className="flex items-center space-x-3 p-3 text-gray-700 hover:bg-blue-50 rounded-lg">
+//           <Link href="/dashboard/employees" className="flex items-center space-x-3 p-3 text-black hover:bg-blue-50 rounded-lg">
 //             <Users size={20} />
 //             <span>Employees</span>
 //           </Link>
-//           <Link href="/dashboard/attendance" className="flex items-center space-x-3 p-3 text-gray-700 hover:bg-blue-50 rounded-lg">
+//           <Link href="/dashboard/attendance" className="flex items-center space-x-3 p-3 text-black hover:bg-blue-50 rounded-lg">
 //             <Calendar size={20} />
 //             <span>Attendance</span>
 //           </Link>
-//           <Link href="/dashboard/payroll" className="flex items-center space-x-3 p-3 text-gray-700 hover:bg-blue-50 rounded-lg">
+//           <Link href="/dashboard/payroll" className="flex items-center space-x-3 p-3 text-black hover:bg-blue-50 rounded-lg">
 //             <DollarSign size={20} />
 //             <span>Payroll</span>
 //           </Link>

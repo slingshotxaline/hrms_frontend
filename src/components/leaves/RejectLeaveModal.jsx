@@ -47,7 +47,7 @@ export default function RejectLeaveModal({ onClose, onConfirm }) {
             </div>
           </div>
 
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-black mb-2">
             Rejection Reason <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -70,7 +70,7 @@ export default function RejectLeaveModal({ onClose, onConfirm }) {
             </p>
           )}
 
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-black mt-2">
             {rejectionReason.length}/500 characters
           </p>
         </div>

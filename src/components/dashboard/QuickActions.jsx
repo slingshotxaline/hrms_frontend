@@ -8,7 +8,7 @@ export default function QuickActions() {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+      <h2 className="text-xl font-bold text-black mb-4">Quick Actions</h2>
       <div className="space-y-3">
         <Button 
           variant="primary" 

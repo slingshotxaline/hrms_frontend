@@ -3,10 +3,10 @@ export default function Button({ children, onClick, variant = 'primary', classNa
     
     const variants = {
       primary: 'bg-black text-white hover:bg-gray-800',
-      secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+      secondary: 'bg-gray-200 text-black hover:bg-gray-300',
       danger: 'bg-red-600 text-white hover:bg-red-700',
       success: 'bg-green-600 text-white hover:bg-green-700',
-      outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50',
+      outline: 'border border-gray-300 text-black hover:bg-gray-50',
     }
   
     return (

@@ -53,8 +53,8 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
               <Lock className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900">{employee.firstName} {employee.lastName}</p>
-              <p className="text-sm text-gray-600">{employee.employeeCode} • {employee.department}</p>
+              <p className="font-semibold text-black">{employee.firstName} {employee.lastName}</p>
+              <p className="text-sm text-black">{employee.employeeCode} • {employee.department}</p>
             </div>
           </div>
         </div>
@@ -82,9 +82,9 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
               !useCustom ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-gray-300'
             }`}
           >
-            <RefreshCw className={`w-5 h-5 mx-auto mb-2 ${!useCustom ? 'text-indigo-600' : 'text-gray-500'}`} />
-            <p className={`text-sm font-semibold ${!useCustom ? 'text-indigo-700' : 'text-gray-700'}`}>Auto Generate</p>
-            <p className="text-xs text-gray-500 mt-0.5">Strong random password</p>
+            <RefreshCw className={`w-5 h-5 mx-auto mb-2 ${!useCustom ? 'text-indigo-600' : 'text-black'}`} />
+            <p className={`text-sm font-semibold ${!useCustom ? 'text-indigo-700' : 'text-black'}`}>Auto Generate</p>
+            <p className="text-xs text-black mt-0.5">Strong random password</p>
           </button>
           <button
             type="button"
@@ -93,16 +93,16 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
               useCustom ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-gray-300'
             }`}
           >
-            <Lock className={`w-5 h-5 mx-auto mb-2 ${useCustom ? 'text-indigo-600' : 'text-gray-500'}`} />
-            <p className={`text-sm font-semibold ${useCustom ? 'text-indigo-700' : 'text-gray-700'}`}>Custom Password</p>
-            <p className="text-xs text-gray-500 mt-0.5">Set your own password</p>
+            <Lock className={`w-5 h-5 mx-auto mb-2 ${useCustom ? 'text-indigo-600' : 'text-black'}`} />
+            <p className={`text-sm font-semibold ${useCustom ? 'text-indigo-700' : 'text-black'}`}>Custom Password</p>
+            <p className="text-xs text-black mt-0.5">Set your own password</p>
           </button>
         </div>
 
         {/* Password Display / Input */}
         {!useCustom ? (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Generated Password</label>
+            <label className="block text-sm font-medium text-black mb-2">Generated Password</label>
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <input
@@ -114,7 +114,7 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-black hover:text-black"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -129,7 +129,7 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
           </div>
         ) : (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Custom Password</label>
+            <label className="block text-sm font-medium text-black mb-2">Custom Password</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -141,7 +141,7 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-black hover:text-black"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -158,7 +158,7 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
             onChange={(e) => setConfirmReset(e.target.checked)}
             className="mt-0.5 w-4 h-4 text-indigo-600"
           />
-          <label htmlFor="confirmReset" className="text-sm text-gray-700">
+          <label htmlFor="confirmReset" className="text-sm text-black">
             I understand that this will change the password for <strong>{employee.firstName} {employee.lastName}</strong> and the employee will need the new password to log in.
           </label>
         </div>

@@ -27,21 +27,21 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Employee</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Leave Type</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Duration</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Days</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Reason</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Approver</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Employee</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Leave Type</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Duration</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Days</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Reason</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Status</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Approver</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {leaves.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
-                  <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-3" />
+                <td colSpan={8} className="px-6 py-12 text-center text-black">
+                  <Calendar className="w-16 h-16 text-black mx-auto mb-3" />
                   <p>No leave requests found</p>
                 </td>
               </tr>
@@ -68,10 +68,10 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                   <tr key={leave._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm">
                       <div>
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-black">
                           {leave.employee?.firstName} {leave.employee?.lastName}
                         </p>
-                        <p className="text-xs text-gray-500">{leave.employee?.employeeCode}</p>
+                        <p className="text-xs text-black">{leave.employee?.employeeCode}</p>
                         <p className="text-xs text-indigo-600 font-medium mt-1">
                           {leave.user?.role}
                         </p>
@@ -82,9 +82,9 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                         {leave.leaveType}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
+                    <td className="px-6 py-4 text-sm text-black">
                       <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <Calendar className="w-4 h-4 text-black" />
                         <div>
                           <p className="font-semibold">
                             {new Date(leave.startDate).toLocaleDateString('en-US', { 
@@ -92,7 +92,7 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                               day: 'numeric' 
                             })}
                           </p>
-                          <p className="text-xs text-gray-500">to</p>
+                          <p className="text-xs text-black">to</p>
                           <p className="font-semibold">
                             {new Date(leave.endDate).toLocaleDateString('en-US', { 
                               month: 'short', 
@@ -108,7 +108,7 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                         {leave.totalDays}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
+                    <td className="px-6 py-4 text-sm text-black">
                       <div className="max-w-xs">
                         <p className="line-clamp-2">{leave.reason}</p>
                       </div>
@@ -124,8 +124,8 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                     {/* ✅ Approver Column */}
                     <td className="px-6 py-4 text-sm">
                       {leave.status === 'Pending' ? (
-                        <div className="text-xs text-gray-500">
-                          <p className="font-medium text-gray-700 mb-1">Can be approved by:</p>
+                        <div className="text-xs text-black">
+                          <p className="font-medium text-black mb-1">Can be approved by:</p>
                           {leave.approvers?.slice(0, 3).map((approver, idx) => (
                             <p key={idx} className="flex items-center gap-1">
                               <User className="w-3 h-3" />
@@ -146,7 +146,7 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                             }`} />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">
+                            <p className="font-semibold text-black">
                               {leave.approvedBy?.name}
                             </p>
                             <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
@@ -154,12 +154,12 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                               leave.approvedByRole === 'HR' ? 'bg-blue-100 text-blue-800' :
                               leave.approvedByRole === 'Business Lead' ? 'bg-purple-100 text-purple-800' :
                               leave.approvedByRole === 'Team Lead' ? 'bg-green-100 text-green-800' :
-                              'bg-gray-100 text-gray-800'
+                              'bg-gray-100 text-black'
                             }`}>
                               {leave.approvedByRole}
                             </span>
                             {leave.approvedAt && (
-                              <p className="text-xs text-gray-500 mt-0.5">
+                              <p className="text-xs text-black mt-0.5">
                                 {new Date(leave.approvedAt).toLocaleDateString('en-US', {
                                   month: 'short',
                                   day: 'numeric',
@@ -205,7 +205,7 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
                             onClick={() => onDelete(leave._id)}
                             size="sm"
                             variant="outline"
-                            className="border-gray-300 text-gray-600 hover:bg-gray-50"
+                            className="border-gray-300 text-black hover:bg-gray-50"
                           >
                             <Trash2 className="w-4 h-4 mr-1" />
                             Delete
@@ -214,7 +214,7 @@ export default function LeaveTable({ leaves, onApprove, onReject, onDelete, canA
 
                         {/* Show nothing if user can't approve and it's not their leave */}
                         {!canApproveThis && !isOwnLeave && (
-                          <span className="text-xs text-gray-400">No actions available</span>
+                          <span className="text-xs text-black">No actions available</span>
                         )}
                       </div>
                     </td>

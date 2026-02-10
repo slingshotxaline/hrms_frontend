@@ -357,8 +357,8 @@ export default function AttendanceView() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Attendance Management</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-black">Attendance Management</h1>
+          <p className="text-black mt-1">
             {canSeeAll ? 'View and manage all employee attendance' :
              isLeader ? `View your team's attendance (${employees.length} ${employees.length === 1 ? 'member' : 'members'})` :
              'View your attendance records'}
@@ -384,8 +384,8 @@ export default function AttendanceView() {
               onClick={() => setFilterType('date')}
               className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
                 filterType === 'date'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-indigo-500 text-black'
+                  : 'border-transparent text-black hover:text-black'
               }`}
             >
               <CalendarIcon className="w-4 h-4" />
@@ -395,8 +395,8 @@ export default function AttendanceView() {
               onClick={() => setFilterType('month')}
               className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
                 filterType === 'month'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-indigo-500 text-black'
+                  : 'border-transparent text-black hover:text-black'
               }`}
             >
               <Filter className="w-4 h-4" />
@@ -411,35 +411,35 @@ export default function AttendanceView() {
               {/* Date Range Filter */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                  <label className="block text-sm font-medium text-black mb-2">Start Date</label>
                   <input
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                     max={endDate}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                  <label className="block text-sm font-medium text-black mb-2">End Date</label>
                   <input
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     min={startDate}
                     max={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
                   />
                 </div>
 
                 {(canSeeAll || (isLeader && employees.length > 1)) && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Employee</label>
+                    <label className="block text-sm font-medium text-black mb-2">Filter by Employee</label>
                     <select
                       value={filterEmployee}
                       onChange={(e) => setFilterEmployee(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
                     >
                       <option value="all">All {isLeader ? 'Team Members' : 'Employees'}</option>
                       {employees.map((emp) => (
@@ -455,55 +455,55 @@ export default function AttendanceView() {
               {/* Quick Date Presets */}
               <div className="mb-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <CalendarIcon className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">Quick Select:</span>
+                  <CalendarIcon className="w-4 h-4 text-black" />
+                  <span className="text-sm font-medium text-black">Quick Select:</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => applyDatePreset('today')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     Today
                   </button>
                   <button
                     onClick={() => applyDatePreset('yesterday')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     Yesterday
                   </button>
                   <button
                     onClick={() => applyDatePreset('last7days')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     Last 7 Days
                   </button>
                   <button
                     onClick={() => applyDatePreset('thisWeek')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     This Week
                   </button>
                   <button
                     onClick={() => applyDatePreset('lastWeek')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     Last Week
                   </button>
                   <button
                     onClick={() => applyDatePreset('thisMonth')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     This Month
                   </button>
                   <button
                     onClick={() => applyDatePreset('lastMonth')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     Last Month
                   </button>
                   <button
                     onClick={() => applyDatePreset('last30days')}
-                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors"
+                    className="px-4 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 text-black rounded-lg font-medium transition-colors"
                   >
                     Last 30 Days
                   </button>
@@ -514,11 +514,11 @@ export default function AttendanceView() {
             /* Month View Filter */
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+                <label className="block text-sm font-medium text-black mb-2">Month</label>
                 <select
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
                 >
                   {Array.from({ length: 12 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
@@ -529,11 +529,11 @@ export default function AttendanceView() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                <label className="block text-sm font-medium text-black mb-2">Year</label>
                 <select
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(Number(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black" 
                 >
                   {Array.from({ length: 5 }, (_, i) => {
                     const year = new Date().getFullYear() - 2 + i
@@ -546,11 +546,11 @@ export default function AttendanceView() {
 
               {(canSeeAll || (isLeader && employees.length > 1)) && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Employee</label>
+                  <label className="block text-sm font-medium text-black mb-2">Filter by Employee</label>
                   <select
                     value={filterEmployee}
                     onChange={(e) => setFilterEmployee(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black"
                   >
                     <option value="all">All {isLeader ? 'Team Members' : 'Employees'}</option>
                     {employees.map((emp) => (
@@ -567,14 +567,14 @@ export default function AttendanceView() {
           {/* Date Range Info */}
           <div className="mt-4 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-200">
             <div className="flex items-center gap-3 text-sm">
-              <CalendarIcon className="w-5 h-5 text-indigo-600" />
+              <CalendarIcon className="w-5 h-5 text-black" />
               <div>
-                <span className="text-gray-700 font-medium">Showing: </span>
+                <span className="text-black font-medium">Showing: </span>
                 <span className="text-indigo-900 font-bold">{displayStartDate}</span>
-                <span className="text-gray-500 mx-2">to</span>
+                <span className="text-black mx-2">to</span>
                 <span className="text-indigo-900 font-bold">{displayEndDate}</span>
-                <span className="text-gray-400 mx-2">•</span>
-                <span className="text-indigo-600 font-bold">
+                <span className="text-black mx-2">•</span>
+                <span className="text-black font-bold">
                   {filteredAttendance.length} {filteredAttendance.length === 1 ? 'record' : 'records'}
                 </span>
               </div>
@@ -635,8 +635,8 @@ function StatCard({ label, value, color }) {
     <div className="bg-white rounded-lg shadow-lg p-4">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-600">{label}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
+          <p className="text-sm text-black">{label}</p>
+          <p className="text-2xl font-bold text-black mt-1">{value}</p>
         </div>
         <div className={`${color} w-12 h-12 rounded-full flex items-center justify-center`}>
           <Clock className="w-6 h-6 text-white" />

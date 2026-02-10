@@ -111,7 +111,7 @@ export default function ActivityTab({ employeeId }) {
       {/* Personal Activity Section */}
       {employeeId && (
         <div className="mb-8">
-          <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
             <User className="w-5 h-5 text-indigo-600" />
             My Activity
           </h3>
@@ -120,19 +120,19 @@ export default function ActivityTab({ employeeId }) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
               <p className="text-2xl font-bold text-green-600">{stats.totalPresent}</p>
-              <p className="text-xs text-gray-600 mt-1">Present</p>
+              <p className="text-xs text-black mt-1">Present</p>
             </div>
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
               <p className="text-2xl font-bold text-red-600">{stats.totalAbsent}</p>
-              <p className="text-xs text-gray-600 mt-1">Absent</p>
+              <p className="text-xs text-black mt-1">Absent</p>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
               <p className="text-2xl font-bold text-blue-600">{stats.totalLeaves}</p>
-              <p className="text-xs text-gray-600 mt-1">Leaves</p>
+              <p className="text-xs text-black mt-1">Leaves</p>
             </div>
             <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
               <p className="text-2xl font-bold text-orange-600">{stats.totalLate}</p>
-              <p className="text-xs text-gray-600 mt-1">Late Days</p>
+              <p className="text-xs text-black mt-1">Late Days</p>
             </div>
           </div>
 
@@ -144,7 +144,7 @@ export default function ActivityTab({ employeeId }) {
       {/* Admin/HR Activity Section */}
       {isAdminOrHR && (
         <div>
-          <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
             <Users className="w-5 h-5 text-indigo-600" />
             Leave Approval Activity
           </h3>
@@ -155,17 +155,17 @@ export default function ActivityTab({ employeeId }) {
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                 <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-green-600">{adminStats.totalApproved}</p>
-                <p className="text-xs text-gray-600 mt-1">Approved</p>
+                <p className="text-xs text-black mt-1">Approved</p>
               </div>
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
                 <XCircle className="w-6 h-6 text-red-600 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-red-600">{adminStats.totalRejected}</p>
-                <p className="text-xs text-gray-600 mt-1">Rejected</p>
+                <p className="text-xs text-black mt-1">Rejected</p>
               </div>
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
                 <Clock className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-yellow-600">{adminStats.pending}</p>
-                <p className="text-xs text-gray-600 mt-1">Pending</p>
+                <p className="text-xs text-black mt-1">Pending</p>
               </div>
             </div>
           )}
@@ -183,8 +183,8 @@ function ActivityTimeline({ activities, showEmployee }) {
   if (activities.length === 0) {
     return (
       <div className="text-center py-12 bg-gray-50 rounded-lg">
-        <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-        <p className="text-gray-500">No recent activity found</p>
+        <FileText className="w-12 h-12 text-black mx-auto mb-3" />
+        <p className="text-black">No recent activity found</p>
       </div>
     )
   }
@@ -210,13 +210,13 @@ function ActivityTimeline({ activities, showEmployee }) {
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
                 {activity.type === 'attendance' ? (
-                  <Clock className="w-4 h-4 text-gray-500" />
+                  <Clock className="w-4 h-4 text-black" />
                 ) : activity.type === 'leave-approval' ? (
-                  <CheckCircle className="w-4 h-4 text-gray-500" />
+                  <CheckCircle className="w-4 h-4 text-black" />
                 ) : (
-                  <Calendar className="w-4 h-4 text-gray-500" />
+                  <Calendar className="w-4 h-4 text-black" />
                 )}
-                <span className="font-semibold text-gray-900 text-sm">
+                <span className="font-semibold text-black text-sm">
                   {activity.type === 'attendance' ? 'Attendance' : 
                    activity.type === 'leave-approval' ? 'Leave Approval' : 'Leave Request'}
                 </span>
@@ -230,8 +230,8 @@ function ActivityTimeline({ activities, showEmployee }) {
               </p>
             )}
 
-            <div className="mt-2 text-sm text-gray-600">
-              <p className="text-xs text-gray-500">
+            <div className="mt-2 text-sm text-black">
+              <p className="text-xs text-black">
                 {new Date(activity.date).toLocaleDateString('en-US', {
                   weekday: 'long',
                   year: 'numeric',
@@ -271,7 +271,7 @@ function ActivityTimeline({ activities, showEmployee }) {
                     </span>
                   </div>
                   {activity.reason && (
-                    <p className="text-xs text-gray-500 mt-1">{activity.reason}</p>
+                    <p className="text-xs text-black mt-1">{activity.reason}</p>
                   )}
                 </div>
               )}

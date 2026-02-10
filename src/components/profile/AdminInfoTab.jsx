@@ -66,7 +66,7 @@ export default function AdminInfoTab({ profile, employee }) {
 
       {/* Responsibilities */}
       <div className="mb-8">
-        <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <h4 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
           <Award className="w-5 h-5 text-indigo-600" />
           Responsibilities & Permissions
         </h4>
@@ -75,8 +75,8 @@ export default function AdminInfoTab({ profile, employee }) {
             <div key={index} className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
               <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-gray-900">{item.title}</p>
-                <p className="text-sm text-gray-600 mt-0.5">{item.description}</p>
+                <p className="font-semibold text-black">{item.title}</p>
+                <p className="text-sm text-black mt-0.5">{item.description}</p>
               </div>
             </div>
           ))}
@@ -85,7 +85,7 @@ export default function AdminInfoTab({ profile, employee }) {
 
       {/* Statistics Dashboard */}
       <div className="mb-8">
-        <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <h4 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-indigo-600" />
           System Overview
         </h4>
@@ -123,7 +123,7 @@ export default function AdminInfoTab({ profile, employee }) {
 
       {/* Quick Actions */}
       <div>
-        <h4 className="text-lg font-bold text-gray-900 mb-4">Quick Access</h4>
+        <h4 className="text-lg font-bold text-black mb-4">Quick Access</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <QuickActionCard
             title="Employee Management"
@@ -252,9 +252,9 @@ function StatCard({ icon: Icon, label, value, subValue, color }) {
           <Icon className="w-5 h-5 text-white" />
         </div>
       </div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      <p className="text-xs text-gray-600 mt-1">{label}</p>
-      <p className="text-xs text-gray-500 mt-1">{subValue}</p>
+      <p className="text-2xl font-bold text-black">{value}</p>
+      <p className="text-xs text-black mt-1">{label}</p>
+      <p className="text-xs text-black mt-1">{subValue}</p>
     </div>
   )
 }

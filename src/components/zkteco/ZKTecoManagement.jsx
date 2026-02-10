@@ -29,7 +29,7 @@ export default function ZKTecoManagement() {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+      <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-2">
         <Server className="w-6 h-6" />
         ZKTeco Device Management
       </h2>

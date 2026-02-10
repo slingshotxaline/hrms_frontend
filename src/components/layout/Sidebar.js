@@ -169,7 +169,7 @@ export default function Sidebar() {
     'HR': 'bg-blue-100 text-blue-800',
     'Business Lead': 'bg-purple-100 text-purple-800',
     'Team Lead': 'bg-green-100 text-green-800',
-    'Employee': 'bg-gray-100 text-gray-800',
+    'Employee': 'bg-gray-100 text-black',
   }
 
   return (
@@ -213,7 +213,7 @@ export default function Sidebar() {
             <div className="flex-1">
               <p className="font-semibold">{user.name}</p>
               {/* ✅ Show role with color badge */}
-              <span className={`text-xs px-2 py-0.5 rounded-full ${roleColors[user.role] || 'bg-gray-100 text-gray-800'}`}>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${roleColors[user.role] || 'bg-gray-100 text-black'}`}>
                 {user.role}
               </span>
             </div>

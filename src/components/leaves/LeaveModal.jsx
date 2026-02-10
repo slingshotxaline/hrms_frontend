@@ -61,7 +61,7 @@ export default function LeaveModal({ employees, currentUser, isAdminOrHR, onClos
       title="Apply for Leave"
       size="md"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 text-black">
         {isAdminOrHR ? (
           <Select
             label="Employee"
@@ -111,7 +111,7 @@ export default function LeaveModal({ employees, currentUser, isAdminOrHR, onClos
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Reason</label>
+          <label className="block text-sm font-medium text-black mb-2">Reason</label>
           <textarea
             required
             rows="4"

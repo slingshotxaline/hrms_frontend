@@ -7,7 +7,7 @@ export default function LeaveBalanceCards({ leaveBalance, employeeName }) {
   
     return (
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">{employeeName}</h2>
+        <h2 className="text-xl font-bold text-black mb-4">{employeeName}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {leaveTypes.map(({ key, label, color }) => {
             const { total, taken } = leaveBalance[key]

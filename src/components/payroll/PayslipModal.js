@@ -34,29 +34,29 @@ export default function PayslipModal({ payroll, onClose }) {
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center border-b pb-4">
-          <h2 className="text-2xl font-bold text-gray-900">PAYSLIP</h2>
-          <p className="text-gray-600 mt-1">{monthName} {payroll.year}</p>
+          <h2 className="text-2xl font-bold text-black">PAYSLIP</h2>
+          <p className="text-black mt-1">{monthName} {payroll.year}</p>
         </div>
 
         {/* Employee Details */}
         <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
           <div>
-            <p className="text-sm text-gray-600">Employee Name</p>
-            <p className="font-semibold text-gray-900">
+            <p className="text-sm text-black">Employee Name</p>
+            <p className="font-semibold text-black">
               {payroll.employee?.firstName} {payroll.employee?.lastName}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Employee Code</p>
-            <p className="font-semibold text-gray-900">{payroll.employee?.employeeCode}</p>
+            <p className="text-sm text-black">Employee Code</p>
+            <p className="font-semibold text-black">{payroll.employee?.employeeCode}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Department</p>
-            <p className="font-semibold text-gray-900">{payroll.employee?.department}</p>
+            <p className="text-sm text-black">Department</p>
+            <p className="font-semibold text-black">{payroll.employee?.department}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Designation</p>
-            <p className="font-semibold text-gray-900">{payroll.employee?.designation}</p>
+            <p className="text-sm text-black">Designation</p>
+            <p className="font-semibold text-black">{payroll.employee?.designation}</p>
           </div>
         </div>
 
@@ -64,27 +64,27 @@ export default function PayslipModal({ payroll, onClose }) {
         <div className="grid grid-cols-2 gap-6">
           {/* Earnings */}
           <div>
-            <h3 className="font-bold text-gray-900 mb-3 pb-2 border-b">Earnings</h3>
+            <h3 className="font-bold text-black mb-3 pb-2 border-b">Earnings</h3>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-gray-600">Basic Salary</span>
+                <span className="text-black">Basic Salary</span>
                 <span className="font-semibold">${earnings.basic.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">House Rent</span>
+                <span className="text-black">House Rent</span>
                 <span className="font-semibold">${earnings.houseRent.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Medical</span>
+                <span className="text-black">Medical</span>
                 <span className="font-semibold">${earnings.medical.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Transport</span>
+                <span className="text-black">Transport</span>
                 <span className="font-semibold">${earnings.transport.toLocaleString()}</span>
               </div>
               {earnings.other > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Other</span>
+                  <span className="text-black">Other</span>
                   <span className="font-semibold">${earnings.other.toLocaleString()}</span>
                 </div>
               )}
@@ -97,27 +97,27 @@ export default function PayslipModal({ payroll, onClose }) {
 
           {/* Deductions */}
           <div>
-            <h3 className="font-bold text-gray-900 mb-3 pb-2 border-b">Deductions</h3>
+            <h3 className="font-bold text-black mb-3 pb-2 border-b">Deductions</h3>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-gray-600">Tax</span>
+                <span className="text-black">Tax</span>
                 <span className="font-semibold">${deductions.tax.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Provident Fund</span>
+                <span className="text-black">Provident Fund</span>
                 <span className="font-semibold">${deductions.pf.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Absent Deduction</span>
+                <span className="text-black">Absent Deduction</span>
                 <span className="font-semibold">${deductions.absent.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Late Deduction</span>
+                <span className="text-black">Late Deduction</span>
                 <span className="font-semibold">${deductions.late.toLocaleString()}</span>
               </div>
               {deductions.other > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Other</span>
+                  <span className="text-black">Other</span>
                   <span className="font-semibold">${deductions.other.toLocaleString()}</span>
                 </div>
               )}
@@ -132,7 +132,7 @@ export default function PayslipModal({ payroll, onClose }) {
         {/* Net Salary */}
         <div className="bg-indigo-50 p-4 rounded-lg border-2 border-indigo-200">
           <div className="flex justify-between items-center">
-            <span className="text-lg font-bold text-gray-900">Net Salary</span>
+            <span className="text-lg font-bold text-black">Net Salary</span>
             <span className="text-2xl font-bold text-indigo-600">
               ${payroll.netSalary?.toLocaleString()}
             </span>

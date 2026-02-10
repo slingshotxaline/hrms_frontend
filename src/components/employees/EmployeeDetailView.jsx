@@ -101,10 +101,10 @@ export default function EmployeeDetailView({ employeeId }) {
         
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-black">
               {employee.firstName} {employee.lastName}
             </h1>
-            <p className="text-gray-600 mt-1">{employee.designation} • {employee.department}</p>
+            <p className="text-black mt-1">{employee.designation} • {employee.department}</p>
           </div>
           <Button onClick={() => router.push(`/dashboard/employees`)}>
             <Edit className="w-4 h-4 mr-2" />
@@ -156,7 +156,7 @@ export default function EmployeeDetailView({ employeeId }) {
                 className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
                   activeTab === tab
                     ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-black hover:text-black hover:border-gray-300'
                 }`}
               >
                 {tab}
@@ -188,9 +188,9 @@ function StatsCard({ icon: Icon, label, value, subValue, color }) {
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-600 mb-1">{label}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-xs text-gray-500 mt-1">{subValue}</p>
+          <p className="text-sm text-black mb-1">{label}</p>
+          <p className="text-2xl font-bold text-black">{value}</p>
+          <p className="text-xs text-black mt-1">{subValue}</p>
         </div>
         <div className={`${color} p-3 rounded-full`}>
           <Icon className="w-6 h-6 text-white" />
@@ -206,7 +206,7 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Personal Information */}
       <div className="space-y-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Personal Information</h3>
+        <h3 className="text-lg font-bold text-black mb-4">Personal Information</h3>
         
         <InfoRow icon={User} label="Full Name" value={`${employee.firstName} ${employee.lastName}`} />
         <InfoRow icon={Mail} label="Employee Code" value={employee.employeeCode} />
@@ -241,7 +241,7 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
 
       {/* Salary Information */}
       <div className="space-y-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Salary Breakdown</h3>
+        <h3 className="text-lg font-bold text-black mb-4">Salary Breakdown</h3>
         
         <div className="bg-gray-50 rounded-lg p-4 space-y-3">
           <SalaryRow label="Basic Salary" amount={employee.basicSalary} />
@@ -263,7 +263,7 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
           </div>
         </div>
 
-        <h3 className="text-lg font-bold text-gray-900 mt-6 mb-4">Work Schedule</h3>
+        <h3 className="text-lg font-bold text-black mt-6 mb-4">Work Schedule</h3>
         <div className="bg-gray-50 rounded-lg p-4">
           <InfoRow icon={Clock} label="Shift Start" value={employee.shiftStart} />
           <InfoRow icon={Clock} label="Shift End" value={employee.shiftEnd} />
@@ -272,11 +272,11 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
 
       {/* Payroll Summary */}
       <div className="lg:col-span-2">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Payroll Summary</h3>
+        <h3 className="text-lg font-bold text-black mb-4">Payroll Summary</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Current Month */}
           <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-6 border border-indigo-200">
-            <h4 className="font-semibold text-gray-900 mb-4">Current Month</h4>
+            <h4 className="font-semibold text-black mb-4">Current Month</h4>
             {currentMonthPayroll ? (
               <div className="space-y-2">
                 <SalaryRow label="Gross Earnings" amount={currentMonthPayroll.totalEarnings} />
@@ -289,13 +289,13 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
                 </div>
               </div>
             ) : (
-              <p className="text-gray-600 text-sm">No payroll generated yet</p>
+              <p className="text-black text-sm">No payroll generated yet</p>
             )}
           </div>
 
           {/* Last Month */}
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 border border-gray-200">
-            <h4 className="font-semibold text-gray-900 mb-4">Last Month</h4>
+            <h4 className="font-semibold text-black mb-4">Last Month</h4>
             {lastMonthPayroll ? (
               <div className="space-y-2">
                 <SalaryRow label="Gross Earnings" amount={lastMonthPayroll.totalEarnings} />
@@ -308,7 +308,7 @@ function OverviewTab({ employee, currentMonthPayroll, lastMonthPayroll }) {
                 </div>
               </div>
             ) : (
-              <p className="text-gray-600 text-sm">No payroll data available</p>
+              <p className="text-black text-sm">No payroll data available</p>
             )}
           </div>
         </div>
@@ -368,14 +368,14 @@ function AttendanceTab({ attendance, employeeId }) {
       <div>
         {/* Month/Year Filter */}
         <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-6 mb-6 border border-indigo-200">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Select Period</h3>
+          <h3 className="text-lg font-bold text-black mb-4">Select Period</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+              <label className="block text-sm font-medium text-black mb-2">Month</label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-black"
               >
                 {monthOptions.map(option => (
                   <option key={option.value} value={option.value}>{option.label}</option>
@@ -383,11 +383,11 @@ function AttendanceTab({ attendance, employeeId }) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+              <label className="block text-sm font-medium text-black mb-2">Year</label>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-black"
               >
                 {yearOptions.map(option => (
                   <option key={option.value} value={option.value}>{option.label}</option>
@@ -395,11 +395,11 @@ function AttendanceTab({ attendance, employeeId }) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status Filter</label>
+              <label className="block text-sm font-medium text-black mb-2">Status Filter</label>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-black"
               >
                 <option value="all">All Status</option>
                 <option value="Present">Present</option>
@@ -413,7 +413,7 @@ function AttendanceTab({ attendance, employeeId }) {
   
         {/* Statistics */}
         <div className="mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">
+          <h3 className="text-lg font-bold text-black mb-4">
             {selectedMonthName} {selectedYear} Summary
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -433,28 +433,28 @@ function AttendanceTab({ attendance, employeeId }) {
         {/* Attendance Records */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-            <h3 className="font-semibold text-gray-900">
+            <h3 className="font-semibold text-black">
               Attendance Records ({filteredAttendance.length} {filteredAttendance.length === 1 ? 'record' : 'records'})
             </h3>
           </div>
   
           {filteredAttendance.length === 0 ? (
             <div className="text-center py-12">
-              <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No attendance records found for {selectedMonthName} {selectedYear}</p>
+              <Calendar className="w-16 h-16 text-black mx-auto mb-4" />
+              <p className="text-black">No attendance records found for {selectedMonthName} {selectedYear}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Day</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">In Time</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Out Time</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Hours</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Late</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-black uppercase">Date</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-black uppercase">Day</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-black uppercase">In Time</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-black uppercase">Out Time</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-black uppercase">Hours</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-black uppercase">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-black uppercase">Late</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -469,29 +469,29 @@ function AttendanceTab({ attendance, employeeId }) {
   
                     return (
                       <tr key={record._id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                        <td className="px-4 py-3 text-sm font-medium text-black">
                           {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-black">
                           <span className={`font-semibold ${
-                            dayName === 'Sat' || dayName === 'Sun' ? 'text-red-600' : 'text-gray-900'
+                            dayName === 'Sat' || dayName === 'Sun' ? 'text-red-600' : 'text-black'
                           }`}>
                             {dayName}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-black">
                           {record.inTime ? new Date(record.inTime).toLocaleTimeString('en-US', { 
                             hour: '2-digit', 
                             minute: '2-digit' 
                           }) : '-'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-black">
                           {record.outTime ? new Date(record.outTime).toLocaleTimeString('en-US', { 
                             hour: '2-digit', 
                             minute: '2-digit' 
                           }) : '-'}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-black">
                           {workingHours > 0 ? `${workingHours.toFixed(1)}h` : '-'}
                         </td>
                         <td className="px-4 py-3 text-sm">
@@ -564,8 +564,8 @@ function PayrollTab({ payrolls, employee }) {
     <div className="space-y-6">
       {payrolls.length === 0 ? (
         <div className="text-center py-12">
-          <TbCurrencyTaka className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No payroll records found</p>
+          <TbCurrencyTaka className="w-16 h-16 text-black mx-auto mb-4" />
+          <p className="text-black">No payroll records found</p>
         </div>
       ) : (
         payrolls.map((payroll) => {
@@ -575,11 +575,11 @@ function PayrollTab({ payrolls, employee }) {
             <div key={payroll._id} className="bg-white border border-gray-200 rounded-lg p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">{monthName} {payroll.year}</h3>
+                  <h3 className="text-xl font-bold text-black">{monthName} {payroll.year}</h3>
                   <Badge status={payroll.status} />
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-600">Net Salary</p>
+                  <p className="text-sm text-black">Net Salary</p>
                   <p className="text-2xl font-bold text-indigo-600">${payroll.netSalary?.toLocaleString()}</p>
                 </div>
               </div>
@@ -587,7 +587,7 @@ function PayrollTab({ payrolls, employee }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Earnings */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Earnings</h4>
+                  <h4 className="font-semibold text-black mb-3">Earnings</h4>
                   <div className="space-y-2">
                     <SalaryRow label="Basic Salary" amount={payroll.basicSalary} />
                     <SalaryRow label="House Rent" amount={payroll.allowances?.houseRent || 0} />
@@ -604,7 +604,7 @@ function PayrollTab({ payrolls, employee }) {
 
                 {/* Deductions */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Deductions</h4>
+                  <h4 className="font-semibold text-black mb-3">Deductions</h4>
                   <div className="space-y-2">
                     <SalaryRow label="Tax" amount={payroll.deductions?.tax || 0} isDeduction />
                     <SalaryRow label="Provident Fund" amount={payroll.deductions?.providentFund || 0} isDeduction />
@@ -631,11 +631,11 @@ function PayrollTab({ payrolls, employee }) {
 function InfoRow({ icon: Icon, label, value, badge, badgeColor }) {
   return (
     <div className="flex items-start gap-3">
-      <Icon className="w-5 h-5 text-gray-400 mt-0.5" />
+      <Icon className="w-5 h-5 text-black mt-0.5" />
       <div className="flex-1">
-        <p className="text-sm text-gray-600">{label}</p>
+        <p className="text-sm text-black">{label}</p>
         <div className="flex items-center gap-2">
-          <p className="font-semibold text-gray-900">{value}</p>
+          <p className="font-semibold text-black">{value}</p>
           {badge && (
             <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
               badgeColor === 'green' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -652,8 +652,8 @@ function InfoRow({ icon: Icon, label, value, badge, badgeColor }) {
 function SalaryRow({ label, amount, bold, isDeduction }) {
   return (
     <div className="flex justify-between items-center">
-      <span className={`${bold ? 'font-bold' : ''} text-gray-700`}>{label}</span>
-      <span className={`${bold ? 'font-bold text-lg' : ''} ${isDeduction ? 'text-red-600' : 'text-gray-900'}`}>
+      <span className={`${bold ? 'font-bold' : ''} text-black`}>{label}</span>
+      <span className={`${bold ? 'font-bold text-lg' : ''} ${isDeduction ? 'text-red-600' : 'text-black'}`}>
         {isDeduction && '-'}৳{amount?.toLocaleString()}
       </span>
     </div>
@@ -663,7 +663,7 @@ function SalaryRow({ label, amount, bold, isDeduction }) {
 function StatBox({ label, value, color, bgColor }) {
   return (
     <div className={`${bgColor} rounded-lg p-4 text-center`}>
-      <p className="text-sm text-gray-600 mb-1">{label}</p>
+      <p className="text-sm text-black mb-1">{label}</p>
       <p className={`text-3xl font-bold ${color}`}>{value}</p>
     </div>
   )

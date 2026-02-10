@@ -107,15 +107,15 @@ export default function CreateUserModal({ isOpen, onClose, employee, onSuccess }
           <h3 className="font-semibold text-blue-900 mb-2">Employee Details</h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div>
-              <span className="text-gray-600">Code:</span>
+              <span className="text-black">Code:</span>
               <span className="ml-2 font-semibold">{employee?.employeeCode}</span>
             </div>
             <div>
-              <span className="text-gray-600">Department:</span>
+              <span className="text-black">Department:</span>
               <span className="ml-2 font-semibold">{employee?.department}</span>
             </div>
             <div className="col-span-2">
-              <span className="text-gray-600">Designation:</span>
+              <span className="text-black">Designation:</span>
               <span className="ml-2 font-semibold">{employee?.designation}</span>
             </div>
           </div>
@@ -132,6 +132,7 @@ export default function CreateUserModal({ isOpen, onClose, employee, onSuccess }
             placeholder="John Doe"
             required
             icon={User}
+            className=""
           />
 
           <Input
@@ -147,7 +148,7 @@ export default function CreateUserModal({ isOpen, onClose, employee, onSuccess }
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-black mb-2">
               Role <span className="text-red-500">*</span>
             </label>
             <select
