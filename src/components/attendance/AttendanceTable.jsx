@@ -8,6 +8,7 @@ import {
   Eye,
   Coffee,
   Calendar,
+  AlertCircle,
 } from "lucide-react";
 import PunchDetailsModal from "./PunchDetailsModal";
 
@@ -206,9 +207,7 @@ export default function AttendanceTable({
                 <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
                   <div className="flex flex-col">
                     <span>Working</span>
-                    <span className="text-xs text-black font-normal">
-                      Net
-                    </span>
+                    <span className="text-xs text-black font-normal">Net</span>
                   </div>
                 </th>
                 <th className="px-4 py-4 text-left text-xs font-semibold text-black uppercase">
@@ -425,6 +424,17 @@ export default function AttendanceTable({
                             </span>
                           </button>
                         </td>
+                        {record.lateMinutes > 0 &&
+                          record.status === "Present" &&
+                          !record.lateApplication && (
+                            <button
+                              onClick={() => handleApplyLate(record)}
+                              className="text-orange-600 hover:text-orange-800"
+                              title="Apply for Late Approval"
+                            >
+                              <AlertCircle className="w-4 h-4" />
+                            </button>
+                          )}
                       </tr>
                     );
                   })

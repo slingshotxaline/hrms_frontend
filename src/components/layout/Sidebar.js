@@ -134,7 +134,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
-import { Home, Users, Clock, Calendar, DollarSign, FileText, Menu, X, LogOut, User, Shield } from 'lucide-react'
+import { Home, Users, Clock, Calendar, DollarSign, FileText, Menu, X, LogOut, User, Shield,AlertCircle } from 'lucide-react'
 
 export default function Sidebar() {
   const { user, logout, refreshUserProfile } = useAuth()
@@ -153,6 +153,7 @@ export default function Sidebar() {
     { id: 'attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Admin', 'HR'] },
     { id: 'my-attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Employee', 'Team Lead', 'Business Lead'] },
     { id: 'leaves', name: 'Leave Management', icon: Calendar, path: '/dashboard/leaves' },
+    { id: 'lates', name: 'Late Management', icon: AlertCircle, path: '/dashboard/lates' },
     { id: 'payroll', name: 'Payroll', icon: DollarSign, path: '/dashboard/payroll', roles: ['Admin', 'HR'] },
     { id: 'holidays', name: 'Holidays', icon: FileText, path: '/dashboard/holidays' },
     { id: 'roles', name: 'Role Management', icon: Shield, path: '/dashboard/roles', roles: ['Admin', 'HR', ] },
