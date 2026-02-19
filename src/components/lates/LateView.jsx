@@ -1,166 +1,175 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { apiCall } from "@/lib/api";
-import Loading from "@/components/common/Loading";
-import Button from "@/components/common/Button";
-import LateTable from "./LateTable";
-import ApplyLateModal from "./ApplyLateModal";
-import RejectLateModal from "./RejectLateModal";
-import LateSettingsModal from "./LateSettingsModal";
-import { Clock, Plus, Filter, Settings } from "lucide-react";
+import { useState, useEffect } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
+import { apiCall } from '@/lib/api'
+import Loading from '@/components/common/Loading'
+import Button from '@/components/common/Button'
+import LateTable from './LateTable'
+import ApplyLateModal from './ApplyLateModal'
+import RejectLateModal from './RejectLateModal'
+import LateSettingsModal from './LateSettingsModal'
+import { Clock, Plus, Filter, Settings, AlertCircle } from 'lucide-react'
 
 export default function LateView() {
-  const { user } = useAuth();
-  const [lates, setLates] = useState([]);
-  const [attendances, setAttendances] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showApplyModal, setShowApplyModal] = useState(false);
-  const [showRejectModal, setShowRejectModal] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [selectedLate, setSelectedLate] = useState(null);
-  const [filterStatus, setFilterStatus] = useState("all");
+  const { user } = useAuth()
+  const [lates, setLates] = useState([])
+  const [myAttendances, setMyAttendances] = useState([]) // ✅ Unapplied late attendances
+  const [loading, setLoading] = useState(true)
+  const [showApplyModal, setShowApplyModal] = useState(false)
+  const [showRejectModal, setShowRejectModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
+  const [selectedLate, setSelectedLate] = useState(null)
+  const [filterStatus, setFilterStatus] = useState('all')
 
-  const isAdmin = user?.role === "Admin";
-  const isHR = user?.role === "HR";
-  const isLeader = ["Business Lead", "Team Lead"].includes(user?.role);
-  const canApprove = isAdmin || isHR || isLeader;
+  const isAdmin = user?.role === 'Admin'
+  const isHR = user?.role === 'HR'
+  const isBusinessLead = user?.role === 'Business Lead'
+  const isTeamLead = user?.role === 'Team Lead'
+  const isEmployee = user?.role === 'Employee'
+  const isLeader = isBusinessLead || isTeamLead
+
+  // ✅ ALL roles can apply for late (including Business Lead, Team Lead, HR, Admin)
+  const canApplyLate = true
+
+  // ✅ Leaders, HR, Admin can approve/reject
+  const canApprove = isAdmin || isHR || isLeader
 
   useEffect(() => {
-    fetchData();
-  }, [filterStatus]);
+    fetchLates()
+    fetchMyLateAttendances() // ✅ Always fetch for ALL roles
+  }, [filterStatus])
 
-  const fetchData = async () => {
-    setLoading(true);
+  // ✅ Fetch late applications list
+  const fetchLates = async () => {
     try {
-      console.log("🔍 Fetching late data...");
-
-      // Get lates based on filter
-      const query = filterStatus !== "all" ? `?status=${filterStatus}` : "";
-      const latesData = await apiCall(`/lates${query}`);
-
-      console.log(`📋 Fetched ${latesData.length} late applications`);
-      setLates(latesData);
-
-      // ✅ Get my late attendances (for applying) - ALL ROLES CAN APPLY
-      const today = new Date();
-      const startDate = new Date(today.getFullYear(), today.getMonth(), 1)
-        .toISOString()
-        .split("T")[0];
-      const endDate = today.toISOString().split("T")[0];
-
-      // ✅ Fetch attendances for current user
-      const profile = await apiCall("/auth/profile");
-      console.log("👤 Current user profile:", profile);
-
-      if (profile.employeeId) {
-        const empId = profile.employeeId._id || profile.employeeId;
-        const attendanceData = await apiCall(
-          `/attendance?startDate=${startDate}&endDate=${endDate}&employeeId=${empId}`
-        );
-
-        console.log(
-          `📊 Fetched ${attendanceData.length} attendances for employee ${empId}`
-        );
-
-        // Filter only late attendances that don't have applications
-        const lateAttendances = attendanceData.filter((a) => {
-          const hasLateApp = latesData.some((l) => {
-            const lateAttId = l.attendance?._id || l.attendance;
-            return lateAttId === a._id;
-          });
-          return a.lateMinutes > 0 && !hasLateApp;
-        });
-
-        setAttendances(lateAttendances);
-        console.log(
-          `⏰ Found ${lateAttendances.length} unapplied late attendances`
-        );
-      }
+      console.log('🔍 Fetching late applications...')
+      const query = filterStatus !== 'all' ? `?status=${filterStatus}` : ''
+      const latesData = await apiCall(`/lates${query}`)
+      console.log(`📋 Fetched ${latesData.length} late applications`)
+      setLates(latesData)
     } catch (error) {
-      console.error("❌ Error fetching lates:", error);
-      alert("Error loading late data: " + error.message);
-    } finally {
-      setLoading(false);
+      console.error('❌ Error fetching lates:', error)
     }
-  };
+  }
+
+  // ✅ Fetch MY late attendances that haven't been applied yet (ALL ROLES)
+  const fetchMyLateAttendances = async () => {
+    try {
+      console.log(`🔍 Fetching my late attendances for role: ${user?.role}`)
+
+      // Get current month date range
+      const today = new Date()
+      const startDate = new Date(today.getFullYear(), today.getMonth(), 1)
+        .toISOString().split('T')[0]
+      const endDate = today.toISOString().split('T')[0]
+
+      console.log(`📅 Date range: ${startDate} to ${endDate}`)
+
+      // ✅ Fetch my attendance records
+      const attendanceData = await apiCall(
+        `/attendance/my?startDate=${startDate}&endDate=${endDate}`
+      )
+
+      console.log(`📊 Total attendance records: ${attendanceData.length}`)
+
+      // ✅ Fetch existing late applications to filter out already-applied ones
+      const query = filterStatus !== 'all' ? `?status=${filterStatus}` : ''
+      const latesData = await apiCall(`/lates${query}`)
+
+      // ✅ Filter: Only late attendances without existing applications
+      const unappliedLateAttendances = attendanceData.filter(att => {
+        // Must be late
+        if (!att.lateMinutes || att.lateMinutes <= 0) return false
+
+        // Must not already have a late application
+        const alreadyApplied = latesData.some(late => {
+          const lateAttId = late.attendance?._id || late.attendance
+          return lateAttId?.toString() === att._id?.toString()
+        })
+
+        return !alreadyApplied
+      })
+
+      console.log(`⏰ Unapplied late attendances: ${unappliedLateAttendances.length}`)
+      setMyAttendances(unappliedLateAttendances)
+    } catch (error) {
+      console.error('❌ Error fetching my late attendances:', error)
+      setMyAttendances([])
+    }
+  }
+
+  // ✅ Refresh all data
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      await fetchLates()
+      await fetchMyLateAttendances()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const handleApprove = async (lateId) => {
-    if (!confirm("Are you sure you want to approve this late application?")) {
-      return;
-    }
+    if (!confirm('Are you sure you want to approve this late application?')) return
 
     try {
-      console.log(`✅ Approving late ${lateId}`);
-
+      console.log(`✅ Approving late ${lateId}`)
       await apiCall(`/lates/${lateId}`, {
-        method: "PUT",
-        body: JSON.stringify({ status: "Approved" }),
-      });
-
-      alert("Late approved successfully!");
-      fetchData();
+        method: 'PUT',
+        body: JSON.stringify({ status: 'Approved' }),
+      })
+      alert('Late approved successfully!')
+      fetchData()
     } catch (error) {
-      console.error("❌ Error approving late:", error);
-      alert("Error approving late: " + error.message);
+      console.error('❌ Error approving late:', error)
+      alert('Error approving late: ' + error.message)
     }
-  };
+  }
 
   const handleReject = (lateId) => {
-    console.log(`❌ Opening reject modal for late ${lateId}`);
-    setSelectedLate(lateId);
-    setShowRejectModal(true);
-  };
+    setSelectedLate(lateId)
+    setShowRejectModal(true)
+  }
 
   const confirmReject = async (rejectionReason) => {
     try {
-      console.log(`❌ Rejecting late ${selectedLate}`);
-
       await apiCall(`/lates/${selectedLate}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          status: "Rejected",
-          rejectionReason,
-        }),
-      });
-
-      alert("Late rejected successfully!");
-      setShowRejectModal(false);
-      setSelectedLate(null);
-      fetchData();
+        method: 'PUT',
+        body: JSON.stringify({ status: 'Rejected', rejectionReason }),
+      })
+      alert('Late rejected successfully!')
+      setShowRejectModal(false)
+      setSelectedLate(null)
+      fetchData()
     } catch (error) {
-      console.error("❌ Error rejecting late:", error);
-      alert("Error rejecting late: " + error.message);
+      alert('Error rejecting late: ' + error.message)
     }
-  };
+  }
 
   const handleDelete = async (lateId) => {
-    if (!confirm("Are you sure you want to delete this late application?")) {
-      return;
-    }
-
+    if (!confirm('Are you sure you want to delete this late application?')) return
     try {
-      await apiCall(`/lates/${lateId}`, {
-        method: "DELETE",
-      });
-
-      alert("Late application deleted successfully!");
-      fetchData();
+      await apiCall(`/lates/${lateId}`, { method: 'DELETE' })
+      alert('Late application deleted!')
+      fetchData()
     } catch (error) {
-      alert("Error deleting late: " + error.message);
+      alert('Error deleting: ' + error.message)
     }
-  };
+  }
 
-  if (loading) return <Loading />;
+  if (loading) return <Loading />
 
-  // Statistics
   const stats = {
     total: lates.length,
-    pending: lates.filter((l) => l.status === "Pending").length,
-    approved: lates.filter((l) => l.status === "Approved").length,
-    rejected: lates.filter((l) => l.status === "Rejected").length,
-  };
+    pending: lates.filter(l => l.status === 'Pending').length,
+    approved: lates.filter(l => l.status === 'Approved').length,
+    rejected: lates.filter(l => l.status === 'Rejected').length,
+  }
 
   return (
     <div>
@@ -170,11 +179,12 @@ export default function LateView() {
           <h1 className="text-3xl font-bold text-gray-900">Late Management</h1>
           <p className="text-gray-600 mt-1">
             {canApprove
-              ? "Manage employee late applications"
-              : "View and apply for late approvals"}
+              ? 'Manage and apply for late approvals'
+              : 'View and apply for late approvals'}
           </p>
         </div>
         <div className="flex gap-3">
+          {/* ✅ Settings button - Admin only */}
           {isAdmin && (
             <Button
               onClick={() => setShowSettingsModal(true)}
@@ -184,29 +194,32 @@ export default function LateView() {
               Settings
             </Button>
           )}
-          {/* ✅ FIX: Allow all roles to apply for late (not just non-admin/HR) */}
-          {attendances.length > 0 && (
-            <Button onClick={() => setShowApplyModal(true)}>
+
+          {/* ✅ Apply for Late button - ALL roles see this if they have unapplied lates */}
+          {myAttendances.length > 0 && (
+            <Button
+              onClick={() => setShowApplyModal(true)}
+              className="bg-indigo-600 hover:bg-indigo-700"
+            >
               <Plus className="w-5 h-5 mr-2" />
-              Apply for Late
+              Apply for Late ({myAttendances.length})
             </Button>
           )}
         </div>
       </div>
 
-      {/* ✅ FIX: Show warning for all roles */}
-      {attendances.length > 0 && (
+      {/* ✅ Warning Banner - Shows for ALL roles with unapplied lates */}
+      {myAttendances.length > 0 && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-lg">
           <div className="flex items-start gap-3">
-            <Clock className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <div>
+            <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
               <h3 className="text-sm font-semibold text-yellow-900">
-                You have {attendances.length} unapplied late arrival(s) this
-                month
+                You have {myAttendances.length} unapplied late arrival(s) this month
               </h3>
               <p className="text-sm text-yellow-700 mt-1">
-                Apply for late approval to avoid deductions from your salary or
-                leave balance.
+                Apply for late approval to avoid deductions from your salary or leave balance.
+                {isLeader && ' As a team leader, you also need to apply for your own late arrivals.'}
               </p>
               <Button
                 onClick={() => setShowApplyModal(true)}
@@ -216,95 +229,57 @@ export default function LateView() {
                 Apply Now
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ No Late Attendances Info */}
+      {myAttendances.length === 0 && (
+        <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-lg">
+          <div className="flex items-center gap-3">
+            <Clock className="w-5 h-5 text-green-600" />
+            <p className="text-sm text-green-700 font-medium">
+              ✓ No unapplied late arrivals this month
+            </p>
           </div>
         </div>
       )}
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <StatCard
-          label="Total Applications"
-          value={stats.total}
-          color="bg-blue-500"
-          icon={Clock}
-        />
-        <StatCard
-          label="Pending"
-          value={stats.pending}
-          color="bg-yellow-500"
-          icon={Clock}
-        />
-        <StatCard
-          label="Approved"
-          value={stats.approved}
-          color="bg-green-500"
-          icon={Clock}
-        />
-        <StatCard
-          label="Rejected"
-          value={stats.rejected}
-          color="bg-red-500"
-          icon={Clock}
-        />
+        <StatCard label="Total Applications" value={stats.total} color="bg-blue-500" />
+        <StatCard label="Pending" value={stats.pending} color="bg-yellow-500" />
+        <StatCard label="Approved" value={stats.approved} color="bg-green-500" />
+        <StatCard label="Rejected" value={stats.rejected} color="bg-red-500" />
       </div>
-
-      {/* Unapplied Lates Warning */}
-      {!isAdmin && !isHR && attendances.length > 0 && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-lg">
-          <div className="flex items-start gap-3">
-            <Clock className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-semibold text-yellow-900">
-                You have {attendances.length} unapplied late arrival(s) this
-                month
-              </h3>
-              <p className="text-sm text-yellow-700 mt-1">
-                Apply for late approval to avoid deductions from your salary or
-                leave balance.
-              </p>
-              <Button
-                onClick={() => setShowApplyModal(true)}
-                size="sm"
-                className="mt-3 bg-yellow-600 hover:bg-yellow-700"
-              >
-                Apply Now
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <Filter className="w-5 h-5 text-gray-600" />
-          <label className="text-sm font-medium text-gray-700">
-            Filter by Status:
-          </label>
+          <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
           <div className="flex gap-2">
-            <FilterButton
-              active={filterStatus === "all"}
-              onClick={() => setFilterStatus("all")}
-              label="All"
-            />
-            <FilterButton
-              active={filterStatus === "Pending"}
-              onClick={() => setFilterStatus("Pending")}
-              label="Pending"
-              color="yellow"
-            />
-            <FilterButton
-              active={filterStatus === "Approved"}
-              onClick={() => setFilterStatus("Approved")}
-              label="Approved"
-              color="green"
-            />
-            <FilterButton
-              active={filterStatus === "Rejected"}
-              onClick={() => setFilterStatus("Rejected")}
-              label="Rejected"
-              color="red"
-            />
+            {['all', 'Pending', 'Approved', 'Rejected'].map(status => (
+              <button
+                key={status}
+                onClick={() => setFilterStatus(status)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  filterStatus === status
+                    ? status === 'all' ? 'bg-indigo-600 text-white'
+                      : status === 'Pending' ? 'bg-yellow-600 text-white'
+                      : status === 'Approved' ? 'bg-green-600 text-white'
+                      : 'bg-red-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {status === 'all' ? 'All' : status}
+                {status !== 'all' && (
+                  <span className="ml-2 px-1.5 py-0.5 rounded-full text-xs bg-white/30">
+                    {stats[status.toLowerCase()]}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -322,7 +297,7 @@ export default function LateView() {
       {/* Apply Late Modal */}
       {showApplyModal && (
         <ApplyLateModal
-          attendances={attendances}
+          attendances={myAttendances}
           onClose={() => setShowApplyModal(false)}
           onSubmit={fetchData}
         />
@@ -332,8 +307,8 @@ export default function LateView() {
       {showRejectModal && (
         <RejectLateModal
           onClose={() => {
-            setShowRejectModal(false);
-            setSelectedLate(null);
+            setShowRejectModal(false)
+            setSelectedLate(null)
           }}
           onConfirm={confirmReject}
         />
@@ -347,10 +322,10 @@ export default function LateView() {
         />
       )}
     </div>
-  );
+  )
 }
 
-function StatCard({ label, value, color, icon: Icon }) {
+function StatCard({ label, value, color }) {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between">
@@ -359,35 +334,9 @@ function StatCard({ label, value, color, icon: Icon }) {
           <p className="text-3xl font-bold text-gray-900">{value}</p>
         </div>
         <div className={`${color} p-3 rounded-full`}>
-          <Icon className="w-6 h-6 text-white" />
+          <Clock className="w-6 h-6 text-white" />
         </div>
       </div>
     </div>
-  );
-}
-
-function FilterButton({ active, onClick, label, color = "indigo" }) {
-  const colors = {
-    indigo: active
-      ? "bg-indigo-600 text-white"
-      : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-    yellow: active
-      ? "bg-yellow-600 text-white"
-      : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-    green: active
-      ? "bg-green-600 text-white"
-      : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-    red: active
-      ? "bg-red-600 text-white"
-      : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${colors[color]}`}
-    >
-      {label}
-    </button>
-  );
+  )
 }

@@ -8,15 +8,18 @@ import Button from "@/components/common/Button";
 import LeaveTable from "./LeaveTable";
 import ApplyLeaveModal from "./ApplyLeaveModal";
 import RejectLeaveModal from "./RejectLeaveModal";
-import { Calendar, Plus, Filter } from "lucide-react";
+import { Calendar, Plus, Filter, Clock, TrendingDown } from 'lucide-react'
+import ApplyHalfDayModal from './ApplyHalfDayModal' // ✅ NEW
 
 export default function LeavesView() {
   const { user } = useAuth();
   const [leaves, setLeaves] = useState([]);
+  const [monthlyUsage, setMonthlyUsage] = useState(null) // ✅ NEW
   const [employees, setEmployees] = useState([]);
   const [myEmployee, setMyEmployee] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const [showHalfDayModal, setShowHalfDayModal] = useState(false) // ✅ NEW
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
@@ -28,7 +31,29 @@ export default function LeavesView() {
 
   useEffect(() => {
     fetchData();
+    fetchMonthlyUsage()
   }, [filterStatus]);
+
+  const fetchLeaves = async () => {
+    try {
+      const query = filterStatus !== 'all' ? `?status=${filterStatus}` : ''
+      const data = await apiCall(`/leaves${query}`)
+      setLeaves(data)
+    } catch (error) {
+      console.error('Error fetching leaves:', error)
+    }
+  }
+
+  // ✅ NEW: Fetch monthly usage for current user
+  const fetchMonthlyUsage = async () => {
+    try {
+      const data = await apiCall('/leaves/monthly-usage')
+      setMonthlyUsage(data)
+    } catch (error) {
+      console.error('Error fetching monthly usage:', error)
+    }
+  }
+
 
   const fetchData = async () => {
     setLoading(true);
@@ -160,20 +185,90 @@ export default function LeavesView() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-black">Leave Management</h1>
-          <p className="text-black mt-1">
-            {canViewAll
-              ? "Manage all employee leave requests"
-              : isLeader
-              ? "Manage your team leave requests"
-              : "View and apply for leaves"}
+          <h1 className="text-3xl font-bold text-gray-900">Leave Management</h1>
+          <p className="text-gray-600 mt-1">
+            {canApprove
+              ? 'Manage and approve leave requests'
+              : 'Apply for and track your leaves'}
           </p>
         </div>
-        <Button onClick={() => setShowApplyModal(true)}>
-          <Plus className="w-5 h-5 mr-2 inline" />
-          Apply Leave
-        </Button>
+        <div className="flex gap-3">
+          {/* ✅ NEW: Half Day Button */}
+          <Button
+            onClick={() => setShowHalfDayModal(true)}
+            variant="outline"
+            className="border-orange-300 text-orange-600 hover:bg-orange-50"
+          >
+            <Clock className="w-5 h-5 mr-2" />
+            Half Day
+          </Button>
+          <Button onClick={() => setShowApplyModal(true)}>
+            <Plus className="w-5 h-5 mr-2" />
+            Apply for Leave
+          </Button>
+        </div>
       </div>
+
+      {/* ✅ NEW: Monthly Usage Summary */}
+      {monthlyUsage && (
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 mb-6 text-white">
+          <h3 className="text-lg font-bold mb-4">
+            Your Leave Status - {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {/* Leave Balances */}
+            <div className="bg-white/20 rounded-lg p-4">
+              <p className="text-sm opacity-90 mb-1">Sick Leave</p>
+              <p className="text-3xl font-bold">{monthlyUsage.balance.sick}</p>
+              <p className="text-xs opacity-75">days available</p>
+            </div>
+            <div className="bg-white/20 rounded-lg p-4">
+              <p className="text-sm opacity-90 mb-1">Annual Leave</p>
+              <p className="text-3xl font-bold">{monthlyUsage.balance.annual}</p>
+              <p className="text-xs opacity-75">days available</p>
+            </div>
+            <div className="bg-white/20 rounded-lg p-4">
+              <p className="text-sm opacity-90 mb-1">Casual Leave</p>
+              <p className="text-3xl font-bold">{monthlyUsage.balance.casual}</p>
+              <p className="text-xs opacity-75">days available</p>
+            </div>
+
+            {/* Monthly Limits */}
+            <div className="bg-white/20 rounded-lg p-4">
+              <p className="text-sm opacity-90 mb-1">Annual (This Month)</p>
+              <p className="text-3xl font-bold">
+                {monthlyUsage.remaining.annual}/{monthlyUsage.limits.annual}
+              </p>
+              <p className="text-xs opacity-75">days remaining</p>
+            </div>
+            <div className="bg-white/20 rounded-lg p-4">
+              <p className="text-sm opacity-90 mb-1">Casual (This Month)</p>
+              <p className="text-3xl font-bold">
+                {monthlyUsage.remaining.casual}/{monthlyUsage.limits.casual}
+              </p>
+              <p className="text-xs opacity-75">days remaining</p>
+            </div>
+          </div>
+
+          {/* Usage Warnings */}
+          {monthlyUsage.remaining.annual === 0 && (
+            <div className="mt-4 p-3 bg-red-500/30 rounded-lg flex items-center gap-2">
+              <TrendingDown className="w-5 h-5" />
+              <p className="text-sm font-medium">
+                ⚠️ You&apos;ve reached your annual leave limit for this month (2 days max)
+              </p>
+            </div>
+          )}
+          {monthlyUsage.remaining.casual === 0 && (
+            <div className="mt-4 p-3 bg-red-500/30 rounded-lg flex items-center gap-2">
+              <TrendingDown className="w-5 h-5" />
+              <p className="text-sm font-medium">
+                ⚠️ You&apos;ve reached your casual leave limit for this month (5 days max)
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -295,11 +390,20 @@ export default function LeavesView() {
       {/* Apply Leave Modal */}
       {showApplyModal && (
         <ApplyLeaveModal
-          myEmployee={myEmployee}
           onClose={() => setShowApplyModal(false)}
-          onSubmit={fetchData}
+          onSuccess={fetchData}
+          monthlyUsage={monthlyUsage}
         />
       )}
+
+       {/* ✅ NEW: Half Day Modal */}
+       {showHalfDayModal && (
+        <ApplyHalfDayModal
+          onClose={() => setShowHalfDayModal(false)}
+          onSuccess={fetchData}
+        />
+      )}
+
 
       {/* Reject Leave Modal */}
       {showRejectModal && (
