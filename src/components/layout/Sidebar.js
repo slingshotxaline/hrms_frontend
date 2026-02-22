@@ -150,8 +150,9 @@ export default function Sidebar() {
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: Home, path: '/dashboard' },
     { id: 'employees', name: 'Employees', icon: Users, path: '/dashboard/employees', roles: ['Admin', 'HR'] },
-    { id: 'attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Admin', 'HR'] },
-    { id: 'my-attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Employee', 'Team Lead', 'Business Lead'] },
+    // { id: 'attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Admin', 'HR'] },
+    { id: 'attendance', name: 'Attendance', icon: Clock, path: '/dashboard/attendance', roles: ['Admin', 'HR','Employee', 'Team Lead', 'Business Lead'] },
+    {id: 'my-attendance',  name: 'My Attendance', path: '/dashboard/attendance/my-attendance', icon: Calendar, show: true }, // ✅ NEW
     { id: 'leaves', name: 'Leave Management', icon: Calendar, path: '/dashboard/leaves' },
     { id: 'lates', name: 'Late Management', icon: AlertCircle, path: '/dashboard/lates' },
     { id: 'payroll', name: 'Payroll', icon: DollarSign, path: '/dashboard/payroll', roles: ['Admin', 'HR'] },

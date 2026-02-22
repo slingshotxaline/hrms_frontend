@@ -1,7 +1,5 @@
-
-
-import MyAttendanceView from '@/components/attendance/MyAttendanceView'
+import MyAttendanceCalendar from "@/components/attendance/MyAttendanceCalendar";
 
 export default function MyAttendancePage() {
-  return <MyAttendanceView />
+  return <MyAttendanceCalendar />;
 }
