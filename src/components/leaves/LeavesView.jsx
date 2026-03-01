@@ -211,7 +211,7 @@ export default function LeavesView() {
 
       {/* ✅ NEW: Monthly Usage Summary */}
       {monthlyUsage && (
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 mb-6 text-white">
+        <div className="bg-linear-to-r from-indigo-500 to-purple-600 rounded-xl p-6 mb-6 text-white">
           <h3 className="text-lg font-bold mb-4">
             Your Leave Status - {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
           </h3>

@@ -180,7 +180,7 @@ export default function LateSettingsModal({ onClose, onUpdate }) {
         {/* Info Box */}
         <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
             <div className="text-sm text-blue-700">
               <p className="font-medium mb-2">Current Rules Summary:</p>
               <ul className="list-disc list-inside space-y-1">
@@ -197,7 +197,7 @@ export default function LateSettingsModal({ onClose, onUpdate }) {
         {error && (
           <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>

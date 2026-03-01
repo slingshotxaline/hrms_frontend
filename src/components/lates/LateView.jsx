@@ -212,7 +212,7 @@ export default function LateView() {
       {myAttendances.length > 0 && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-lg">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-6 h-6 text-yellow-600 shrink-0 mt-0.5" />
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-yellow-900">
                 You have {myAttendances.length} unapplied late arrival(s) this month

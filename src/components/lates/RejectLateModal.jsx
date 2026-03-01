@@ -35,7 +35,7 @@ export default function RejectLateModal({ onClose, onConfirm }) {
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
           <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg mb-4">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
             <div className="flex-1">
               <h4 className="text-sm font-semibold text-red-900 mb-1">
                 Important: Rejection Reason Required
@@ -78,7 +78,7 @@ export default function RejectLateModal({ onClose, onConfirm }) {
         {/* Warning Message */}
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
             <div className="text-sm text-yellow-700">
               <p className="font-medium mb-1">Note:</p>
               <p>If rejected, this late will be counted for salary/leave deduction based on the late management rules.</p>

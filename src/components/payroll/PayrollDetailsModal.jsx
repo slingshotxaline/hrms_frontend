@@ -49,7 +49,7 @@ export default function PayrollDetailsModal({ payroll: initialPayroll, onClose }
     <Modal isOpen={true} onClose={onClose} title="Payroll Details" size="xl">
       <div className="space-y-6">
         {/* Employee Info */}
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
+        <div className="bg-linear-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
               <User className="w-8 h-8" />
@@ -197,7 +197,7 @@ export default function PayrollDetailsModal({ payroll: initialPayroll, onClose }
         </div>
 
         {/* Net Salary */}
-        <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 text-white">
+        <div className="bg-linear-to-r from-green-500 to-emerald-600 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-100 mb-1">Net Salary</p>

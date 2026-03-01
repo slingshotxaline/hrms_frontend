@@ -122,7 +122,7 @@ export default function RegeneratePayrollModal({ onClose, onSuccess, payroll, se
         {/* Warning Message */}
         <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
             <div className="flex-1">
               <h4 className="text-sm font-semibold text-orange-900 mb-1">
                 Important: Payroll Regeneration
@@ -247,7 +247,7 @@ export default function RegeneratePayrollModal({ onClose, onSuccess, payroll, se
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>

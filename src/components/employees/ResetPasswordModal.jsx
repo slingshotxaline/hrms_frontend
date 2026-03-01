@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import Modal from '@/components/common/Modal'
 import Button from '@/components/common/Button'
+import { apiCall } from '@/lib/api' // ✅ Import apiCall
 import { Lock, Copy, Check, RefreshCw, Eye, EyeOff, AlertCircle } from 'lucide-react'
 
-export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
+export default function ResetPasswordModal({ employee, onClose, onSuccess }) { // ✅ Changed from onSubmit to onSuccess
   const [newPassword, setNewPassword] = useState(generatePassword())
   const [useCustom, setUseCustom] = useState(false)
   const [customPassword, setCustomPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [copied, setCopied] = useState(false)
   const [confirmReset, setConfirmReset] = useState(false)
+  const [loading, setLoading] = useState(false) // ✅ Add loading state
 
   function generatePassword() {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
@@ -20,7 +22,7 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
     return password
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => { // ✅ Make async
     e.preventDefault()
     if (!confirmReset) return
 
@@ -30,10 +32,27 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
       return
     }
 
-    onSubmit({
-      userId: employee.user,
-      newPassword: password,
-    })
+    setLoading(true)
+
+    try {
+      // ✅ Call API directly
+      await apiCall('/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: employee.user,
+          newPassword: password,
+        }),
+      })
+
+      alert('Password reset successfully!')
+      onSuccess() // ✅ Call onSuccess to refresh
+      onClose()
+    } catch (error) {
+      console.error('❌ Error resetting password:', error)
+      alert('Failed to reset password: ' + error.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const copyPassword = () => {
@@ -62,7 +81,7 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
         {/* Warning */}
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
             <div>
               <p className="text-sm font-semibold text-amber-800">Important Notice</p>
               <p className="text-xs text-amber-700 mt-1">
@@ -135,8 +154,9 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
                 type={showPassword ? 'text' : 'password'}
                 value={customPassword}
                 onChange={(e) => setCustomPassword(e.target.value)}
-                placeholder="Enter new password"
+                placeholder="Enter new password (min 8 characters)"
                 className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                minLength={8}
               />
               <button
                 type="button"
@@ -146,6 +166,9 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
+            {customPassword && customPassword.length < 8 && (
+              <p className="text-xs text-red-600 mt-1">Password must be at least 8 characters</p>
+            )}
           </div>
         )}
 
@@ -165,10 +188,21 @@ export default function ResetPasswordModal({ employee, onClose, onSubmit }) {
 
         {/* Actions */}
         <div className="flex gap-3 justify-end pt-4 border-t">
-          <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="danger" disabled={!confirmReset}>
-            <Lock className="w-4 h-4 mr-2 inline" />
-            Reset Password
+          <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button type="submit" variant="danger" disabled={!confirmReset || loading}>
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                Resetting...
+              </>
+            ) : (
+              <>
+                <Lock className="w-4 h-4 mr-2" />
+                Reset Password
+              </>
+            )}
           </Button>
         </div>
       </form>

@@ -197,7 +197,7 @@ export default function ApplyLeaveModal({ onClose, onSuccess, monthlyUsage }) {
         {limitWarning && (
           <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
             <div className="flex items-start gap-2">
-              <TrendingDown className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+              <TrendingDown className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
               <p className="text-sm text-orange-700">{limitWarning}</p>
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function ApplyLeaveModal({ onClose, onSuccess, monthlyUsage }) {
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div className="flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>
